@@ -42,6 +42,12 @@ const userSchema = new mongoose.Schema(
 				"bio must be less than 200 characters",
 			],
 		},
+		bookmarkedPrompts: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: "Prompt",
+			},
+		],
 	},
 	{
 		timestamps: true,
