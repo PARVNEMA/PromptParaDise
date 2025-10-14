@@ -10,7 +10,7 @@ import cors from "cors";
 import MongoSanitize from "express-mongo-sanitize";
 
 import userRoute from "./routes/user.route.js";
-
+import categoryRoute from "./routes/category.route.js";
 import healthRoute from "./routes/health.route.js";
 import connectDB, { getDBStatus } from "./database/db.js";
 dotenv.config();
@@ -109,7 +109,7 @@ app.use(
 // localhost:8000/api/v1/user
 
 app.use("/api/v1/user", userRoute);
-
+app.use("/api/v1/category", categoryRoute);
 app.use("/health", healthRoute);
 
 // ? it should be at the bottom as it always accept teh request and never go to the controllers
