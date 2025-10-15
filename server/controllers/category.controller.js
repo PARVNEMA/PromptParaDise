@@ -4,6 +4,7 @@ import {
 } from "../middleware/error.middleware.js";
 
 import Category from "../models/category.model.js";
+import promptModel from "../models/prompt.model.js";
 import {
 	deleteMediaFromCloudinary,
 	uploadMedia,
@@ -56,6 +57,35 @@ export const getAllCategories = catchAsync(
 			true,
 			"Categories fetched",
 			categories
+		);
+	}
+);
+
+export const getCategoryProducts = catchAsync(
+	async (req, res) => {
+		const { id } = req.params;
+		if (!id) {
+			throw new ApiError("Category id is required", 400);
+		}
+		const category = await Category.findById(id);
+		if (!category) {
+			throw new ApiError("Category not found", 404);
+		}
+		const products = await promptModel.find({
+			category: id,
+		});
+		if (!products) {
+			throw new ApiError(
+				"No products found for this category",
+				404
+			);
+		}
+		sendResponse(
+			res,
+			200,
+			true,
+			"Products fetched",
+			products
 		);
 	}
 );

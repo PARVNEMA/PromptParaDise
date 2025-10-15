@@ -12,6 +12,7 @@ import MongoSanitize from "express-mongo-sanitize";
 import userRoute from "./routes/user.route.js";
 import categoryRoute from "./routes/category.route.js";
 import healthRoute from "./routes/health.route.js";
+import promptRoute from "./routes/prompt.route.js";
 import connectDB, { getDBStatus } from "./database/db.js";
 dotenv.config();
 
@@ -109,6 +110,7 @@ app.use(
 // localhost:8000/api/v1/user
 
 app.use("/api/v1/user", userRoute);
+app.use("/api/v1/prompt", promptRoute);
 app.use("/api/v1/category", categoryRoute);
 app.use("/health", healthRoute);
 
