@@ -59,6 +59,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const authResponse = await authService.login(credentials);
       setUser(authResponse.user);
       setToken(authResponse.token);
+      setisAuthenticated(true);
     } catch (error) {
       throw error;
     } finally {
@@ -72,6 +73,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const authResponse = await authService.register(credentials);
       setUser(authResponse.user);
       setToken(authResponse.token);
+    setisAuthenticated(true);
     } catch (error) {
       throw error;
     } finally {

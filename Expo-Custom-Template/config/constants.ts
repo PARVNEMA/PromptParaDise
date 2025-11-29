@@ -1,7 +1,6 @@
 export const API_CONFIG = {
-  BASE_URL: process.env.EXPO_PUBLIC_API_BASE_URL || 'https://jsonplaceholder.typicode.com',
-  TIMEOUT: parseInt(process.env.EXPO_PUBLIC_API_TIMEOUT || '10000', 10),
-  RETRY_ATTEMPTS: 3,
+  BASE_URL: 'http://192.168.137.1:8000/api/v1', // Use http://10.0.2.2:3000/api/v1 for Android Emulator
+  TIMEOUT: 10000,
   RETRY_DELAY: 1000,
 } as const;
 
@@ -19,7 +18,7 @@ export const APP_CONFIG = {
 
 export const VALIDATION_RULES = {
   EMAIL_REGEX: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-  PASSWORD_MIN_LENGTH: 8,
+  PASSWORD_MIN_LENGTH: 6,
   NAME_MIN_LENGTH: 2,
   NAME_MAX_LENGTH: 50,
 } as const;

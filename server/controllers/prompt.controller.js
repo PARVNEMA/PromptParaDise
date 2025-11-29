@@ -43,3 +43,63 @@ export const createPrompt = catchAsync(async (req, res) => {
 		newPrompt
 	);
 });
+export const getAllPrompts = catchAsync(
+	async (req, res) => {
+		const search = req.query.search || "";
+		const index = parseInt(req.query.index) || 0;
+		const top = parseInt(req.query.top) || 10;
+
+		const prompts = await promptModel
+			.find({
+				$or: [
+					{ title: { $regex: search, $options: "i" } },
+					{ prompt: { $regex: search, $options: "i" } },
+					{
+						description: { $regex: search, $options: "i" },
+					},
+				],
+			})
+			.skip(index)
+			.limit(top);
+
+		if (prompts.length === 0) {
+			throw new ApiError("No prompts found", 404);
+		}
+
+		sendResponse(
+			res,
+			200,
+			true,
+			"Prompts retrieved successfully",
+			prompts
+		);
+	}
+);
+export const getAllUserPrompts = catchAsync(
+	async (req, res) => {
+		const index = parseInt(req.query.index) || 0;
+		const top = parseInt(req.query.top) || 10;
+
+		const prompts = await promptModel
+			.find({
+				creator: req.id,
+			})
+			.skip(index)
+			.limit(top);
+
+		if (prompts.length === 0) {
+			throw new ApiError(
+				"No prompts found for the user",
+				404
+			);
+		}
+
+		sendResponse(
+			res,
+			200,
+			true,
+			"Prompts for user retrieved successfully",
+			prompts
+		);
+	}
+);

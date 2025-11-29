@@ -38,12 +38,9 @@ const registerSchema = z
         VALIDATION_RULES.PASSWORD_MIN_LENGTH,
         `Password must be at least ${VALIDATION_RULES.PASSWORD_MIN_LENGTH} characters`
       ),
-    confirmPassword: z.string().min(1, 'Please confirm your password'),
+
   })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ['confirmPassword'],
-  });
+
 
 interface RegisterFormProps {
   onSubmit: (data: RegisterCredentials) => Promise<void>;
@@ -66,12 +63,12 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
       name: '',
       email: '',
       password: '',
-      confirmPassword: '',
     },
   });
 
   const handleFormSubmit = async (data: RegisterCredentials) => {
     try {
+      console.log('Register Form Data:', data);
       await onSubmit(data);
       reset();
     } catch (error: any) {
@@ -141,30 +138,13 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
           )}
         />
 
-        <Controller
-          control={control}
-          name="confirmPassword"
-          render={({ field: { onChange, onBlur, value } }) => (
-            <Input
-              label="Confirm Password"
-              placeholder="Confirm your password"
-              value={value}
-              onChangeText={onChange}
-              onBlur={onBlur}
-              error={errors.confirmPassword?.message}
-              leftIcon={<CheckCircle size={20} color="#6B7280" />}
-              secureTextEntry
-              autoComplete="password-new"
-            />
-          )}
-        />
+
 
         <View className="pt-2">
           <Button
             title="Create Account"
             onPress={handleSubmit(handleFormSubmit)}
             loading={loading}
-            disabled={!isValid}
             fullWidth
           />
         </View>

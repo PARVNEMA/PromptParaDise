@@ -100,7 +100,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, loading = false }) => {
           title="Sign In"
           onPress={handleSubmit(handleFormSubmit)}
           loading={loading}
-          disabled={!isValid}
           fullWidth
           size="lg"
           variant="secondary"

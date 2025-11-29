@@ -6,7 +6,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   TouchableOpacity,
-  SafeAreaView,
 } from 'react-native';
 import { Link, router, useRouter } from 'expo-router';
 
@@ -15,6 +14,7 @@ import RegisterForm from '@/components/forms/RegisterForm';
 import Card from '@/components/ui/Card';
 import { RegisterCredentials } from '@/types/auth.types';
 import { APP_CONFIG } from '@/config/constants';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function RegisterScreen() {
   const { register } = useAuth();

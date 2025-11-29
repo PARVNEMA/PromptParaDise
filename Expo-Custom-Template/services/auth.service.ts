@@ -2,47 +2,32 @@ import { apiService } from '@/services/api.service';
 import * as SecureStore from 'expo-secure-store';
 import { AUTH_CONFIG } from '@/config/constants';
 import {
-  LoginCredentials,
+  SignInProps,
   RegisterCredentials,
   AuthResponse,
   User,
+  LoginCredentials,
 } from '@/types/auth.types';
 
 class AuthService {
-  async login(credentials: LoginCredentials): Promise<AuthResponse> {
+  async login(credentials: LoginCredentials): Promise<SignInProps> {
     try {
+      console.log('Login attempt with:', credentials);
       // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // Mock response
-      const mockUser: User = {
-        id: '1',
-        email: credentials.email,
-        name: credentials.email.split('@')[0],
-        role: 'user',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
-
-      const mockResponse: AuthResponse = {
-        user: mockUser,
-        token: 'mock-jwt-token',
-        refreshToken: 'mock-refresh-token',
-        expiresIn: 3600,
-      };
+      const res = await apiService.post('/user/signin', credentials);
+      console.log('Login response:', res);
 
       // Store tokens securely
-      await SecureStore.setItemAsync(AUTH_CONFIG.TOKEN_KEY, mockResponse.token);
-      await SecureStore.setItemAsync(
-        AUTH_CONFIG.REFRESH_TOKEN_KEY,
-        mockResponse.refreshToken
-      );
-      await SecureStore.setItemAsync(
-        AUTH_CONFIG.USER_KEY,
-        JSON.stringify(mockResponse.user)
-      );
+      if (res.success) {
+        await SecureStore.setItemAsync(AUTH_CONFIG.TOKEN_KEY, res.token);
 
-      return mockResponse;
+        await SecureStore.setItemAsync(
+          AUTH_CONFIG.USER_KEY,
+          JSON.stringify(res.user)
+        );
+
+        return res;
+      }
     } catch (error) {
       throw new Error(
         'Login failed. Please check your credentials and try again.'
@@ -50,40 +35,23 @@ class AuthService {
     }
   }
 
-  async register(credentials: RegisterCredentials): Promise<AuthResponse> {
+  async register(credentials: RegisterCredentials): Promise<SignInProps> {
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      console.log('Register attempt with:', credentials);
+      const res=await apiService.post('/user/signup', credentials);
+      console.log('Register response:', res);
+      if(res.success){
 
-      // Mock response
-      const mockUser: User = {
-        id: '2',
-        email: credentials.email,
-        name: credentials.name,
-        role: 'user',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
+        await SecureStore.setItemAsync(AUTH_CONFIG.TOKEN_KEY, res.token);
 
-      const mockResponse: AuthResponse = {
-        user: mockUser,
-        token: 'mock-jwt-token',
-        refreshToken: 'mock-refresh-token',
-        expiresIn: 3600,
-      };
 
-      // Store tokens securely
-      await SecureStore.setItemAsync(AUTH_CONFIG.TOKEN_KEY, mockResponse.token);
-      await SecureStore.setItemAsync(
-        AUTH_CONFIG.REFRESH_TOKEN_KEY,
-        mockResponse.refreshToken
-      );
-      await SecureStore.setItemAsync(
-        AUTH_CONFIG.USER_KEY,
-        JSON.stringify(mockResponse.user)
-      );
+        await SecureStore.setItemAsync(
+          AUTH_CONFIG.USER_KEY,
+          JSON.stringify(res.user)
+        );
 
-      return mockResponse;
+        return res;
+      }
     } catch (error) {
       throw new Error('Registration failed. Please try again.');
     }
@@ -93,7 +61,7 @@ class AuthService {
     try {
       // Clear stored tokens
       await SecureStore.deleteItemAsync(AUTH_CONFIG.TOKEN_KEY);
-      await SecureStore.deleteItemAsync(AUTH_CONFIG.REFRESH_TOKEN_KEY);
+      // await SecureStore.deleteItemAsync(AUTH_CONFIG.REFRESH_TOKEN_KEY);
       await SecureStore.deleteItemAsync(AUTH_CONFIG.USER_KEY);
     } catch (error) {
       console.error('Error during logout:', error);
