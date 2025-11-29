@@ -73,7 +73,7 @@ export const getCategoryProducts = catchAsync(
 		}
 		const products = await promptModel.find({
 			category: id,
-		});
+		}).select("--bookmarks  -likes -tags ");
 		if (!products) {
 			throw new ApiError(
 				"No products found for this category",

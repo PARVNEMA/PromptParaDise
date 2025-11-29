@@ -12,6 +12,6 @@ const router = Router();
 
 router.post("/", upload.single("icon"), createCategory);
 router.get("/", getAllCategories);
-router.get("/:id", isAuthenticated, getCategoryProducts);
+router.get("/getCategoryPrompts/:id", isAuthenticated, getCategoryProducts);
 
 export default router;
