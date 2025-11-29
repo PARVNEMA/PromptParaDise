@@ -42,20 +42,20 @@ export default function RootLayout() {
   const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false);
   const [isDownloadingUpdate, setIsDownloadingUpdate] = useState(false);
 
-  useEffect(() => {
-    async function onFetchUpdateAsync() {
-      try {
-        const update = await Updates.checkForUpdateAsync();
+  // useEffect(() => {
+  //   async function onFetchUpdateAsync() {
+  //     try {
+  //       const update = await Updates.checkForUpdateAsync();
 
-        if (update.isAvailable) {
-          setIsUpdateModalVisible(true);
-        }
-      } catch (error) {
-        console.error(`Error fetching latest Expo update: ${error}`);
-      }
-    }
-    onFetchUpdateAsync();
-  }, []);
+  //       if (update.isAvailable) {
+  //         setIsUpdateModalVisible(true);
+  //       }
+  //     } catch (error) {
+  //       console.error(`Error fetching latest Expo update: ${error}`);
+  //     }
+  //   }
+  //   onFetchUpdateAsync();
+  // }, []);
 
   const handleDownloadUpdate = async () => {
     setIsDownloadingUpdate(true);

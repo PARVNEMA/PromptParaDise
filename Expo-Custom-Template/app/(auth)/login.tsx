@@ -6,7 +6,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   TouchableOpacity,
-  SafeAreaView,
 } from 'react-native';
 import { Link, router, useRouter } from 'expo-router';
 
@@ -15,6 +14,7 @@ import LoginForm from '@/components/forms/LoginForm';
 import Card from '@/components/ui/Card';
 import { LoginCredentials } from '@/types/auth.types';
 import { APP_CONFIG } from '@/config/constants';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function LoginScreen() {
   const { login } = useAuth();
@@ -23,8 +23,11 @@ export default function LoginScreen() {
   const handleLogin = async (credentials: LoginCredentials) => {
     try {
       setIsLoading(true);
-      await login(credentials);
-      router.replace('/(tabs)/home');
+      const res=await login(credentials);
+      if(res){
+
+        router.replace('/(tabs)/home');
+      }
     } catch (error) {
       throw error;
     } finally {

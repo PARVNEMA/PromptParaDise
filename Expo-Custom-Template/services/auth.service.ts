@@ -59,10 +59,14 @@ class AuthService {
 
   async logout(): Promise<void> {
     try {
+      const res=await apiService.post('/user/signout');
+      console.log('Logout response:', res);
+
       // Clear stored tokens
       await SecureStore.deleteItemAsync(AUTH_CONFIG.TOKEN_KEY);
       // await SecureStore.deleteItemAsync(AUTH_CONFIG.REFRESH_TOKEN_KEY);
       await SecureStore.deleteItemAsync(AUTH_CONFIG.USER_KEY);
+
     } catch (error) {
       console.error('Error during logout:', error);
     }

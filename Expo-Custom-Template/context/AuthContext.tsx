@@ -53,29 +53,36 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
-  const login = async (credentials: LoginCredentials): Promise<void> => {
+  const login = async (credentials: LoginCredentials): Promise<Boolean> => {
     try {
       setIsLoading(true);
       const authResponse = await authService.login(credentials);
-      setUser(authResponse.user);
-      setToken(authResponse.token);
-      setisAuthenticated(true);
+      if(authResponse){
+        setUser(authResponse.user);
+        setToken(authResponse.token);
+        setisAuthenticated(true);
+        return true;
+      }
     } catch (error) {
-      throw error;
+      return false;
     } finally {
       setIsLoading(false);
     }
   };
 
-  const register = async (credentials: RegisterCredentials): Promise<void> => {
+  const register = async (credentials: RegisterCredentials): Promise<Boolean> => {
     try {
       setIsLoading(true);
       const authResponse = await authService.register(credentials);
-      setUser(authResponse.user);
-      setToken(authResponse.token);
-    setisAuthenticated(true);
+      if(authResponse){
+
+        setUser(authResponse.user);
+        setToken(authResponse.token);
+        setisAuthenticated(true);
+        return true;
+      }
     } catch (error) {
-      throw error;
+      return false;
     } finally {
       setIsLoading(false);
     }
@@ -85,6 +92,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     try {
       setIsLoading(true);
       await authService.logout();
+      setisAuthenticated(false);
     } catch (error) {
       console.error('Logout error:', error);
     } finally {

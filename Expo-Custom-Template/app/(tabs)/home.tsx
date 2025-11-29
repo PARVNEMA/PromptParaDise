@@ -15,9 +15,11 @@ import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import { Post } from '@/types/api.types';
+import { PromptService } from '@/services/prompt.service';
 
 export default function HomeScreen() {
   const { user } = useAuth();
+  const [isLoading, setIsLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, seterror] = useState('');
 
@@ -25,14 +27,17 @@ export default function HomeScreen() {
 
   const fetchPosts = useCallback(async () => {
     try {
-      // const response = await apiService.getPosts();
-      const response = { data: [] };
-      setPosts(response.data);
+      const response = await PromptService.getAllPrompts();
+      setPosts(response);
+      seterror('');
     } catch (error) {
       seterror('Error fetching posts');
       console.error('Error fetching posts:', error);
+    } finally {
+      setIsLoading(false);
     }
   }, []);
+
 
   useEffect(() => {
     fetchPosts();
@@ -101,30 +106,30 @@ export default function HomeScreen() {
     </Card>
   );
 
-  if (!posts) {
+  if (isLoading) {
     return <LoadingSpinner fullScreen />;
   }
 
   if (error && !posts) {
     return (
-      <SafeAreaView className="flex-1 justify-center items-center px-6 bg-white">
+      <View className="flex-1 justify-center items-center px-6 bg-white">
         <Text className="text-xl font-bold text-gray-900 mb-2 text-center">
           Unable to load posts
         </Text>
         <Text className="text-base text-gray-600 mb-6 text-center">
-          {error?.message}
+          {error}
         </Text>
         <Button
           title="Try Again"
           onPress={() => fetchPosts()}
           variant="primary"
         />
-      </SafeAreaView>
+      </View>
     );
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-50">
+    <View className="flex-1 bg-gray-50">
       {/* Header */}
       <View className="bg-white px-4 py-4 border-b border-gray-200">
         <Text className="text-2xl font-bold text-gray-900">
@@ -161,6 +166,6 @@ export default function HomeScreen() {
           </View>
         )}
       />
-    </SafeAreaView>
+    </View>
   );
 }

@@ -1,5 +1,5 @@
 export const API_CONFIG = {
-  BASE_URL: 'http://192.168.137.1:8000/api/v1', // Use http://10.0.2.2:3000/api/v1 for Android Emulator
+  BASE_URL: 'http://10.150.37.101:8000/api/v1', // Use http://10.0.2.2:3000/api/v1 for Android Emulator
   TIMEOUT: 10000,
   RETRY_DELAY: 1000,
 } as const;
