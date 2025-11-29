@@ -113,3 +113,16 @@ export const getAllUserPrompts = catchAsync(
 		);
 	}
 );
+
+export const getPromptById = catchAsync(async (req, res) => {
+	const { id } = req.params;
+	if(!id){
+		throw new ApiError(" prompt id not found", 400);
+	}
+	const prompt = await promptModel.findById(id).select("-bookmarks  -likes -tags");
+	if (!prompt) {
+		sendResponse(res, 404, true, "Prompt not found");
+		return;
+	}
+	sendResponse(res, 200, true, "Prompt retrieved successfully", prompt);
+});

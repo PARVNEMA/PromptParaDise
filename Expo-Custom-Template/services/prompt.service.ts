@@ -39,4 +39,15 @@ export const PromptService = {
     throw error;
   }
  }
+,
+ getPromptById : async(id:string):Promise<PromptResponse>=>{
+  try {
+    const response = await apiService.get(`/prompt/getprompt/${id}`);
+    console.log("response of getall User prompts",response);
+    return response;
+  } catch (error) {
+    console.error('Error fetching User prompts:', error);
+    throw error;
+  }
+ }
 }

@@ -120,6 +120,12 @@ export default function HomeScreen() {
   };
 
   const renderPromptCard = ({ item, index }: { item: Prompt; index: number }) => (
+    <TouchableOpacity onPress={()=>router.push({
+      pathname:"/(other)/promptDetail",
+      params:{id:item.id}
+    })}>
+
+
     <Card variant="elevated" className="mb-4 mx-4">
       {/* Image Section - Only show if imageUrl exists */}
       {item.imageUrl && (
@@ -202,6 +208,7 @@ export default function HomeScreen() {
         </TouchableOpacity>
       </View>
     </Card>
+      </TouchableOpacity>
   );
 
 
