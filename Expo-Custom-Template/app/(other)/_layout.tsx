@@ -3,7 +3,7 @@ import React from 'react'
 
 const Other = () => {
   return (
-    <Stack/>
+    <Stack screenOptions={{headerShown:false}}/>
   )
 }
 

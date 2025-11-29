@@ -10,7 +10,8 @@ import {
   Image,
   Dimensions,
 } from 'react-native';
-import { Search, Heart, Bookmark, Eye, Tag, Calendar, X } from 'lucide-react-native';
+import { Search, Heart, Bookmark, Eye, Tag, Calendar, X, Plus } from 'lucide-react-native';
+import { router } from 'expo-router';
 
 import { useAuth } from '@/context/AuthContext';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
@@ -128,7 +129,7 @@ export default function HomeScreen() {
             style={{
               width: '100%',
               height: 200,
-              resizeMode: 'cover',
+              resizeMode: 'contain',
             }}
           />
         </View>
@@ -161,30 +162,6 @@ export default function HomeScreen() {
         <Text className="text-sm text-gray-600 mb-3" numberOfLines={2}>
           {item.description}
         </Text>
-
-        {/* Prompt Preview */}
-        <View className="bg-gray-50 p-3 rounded-lg mb-3">
-          <Text className="text-xs text-gray-700" numberOfLines={3}>
-            {item.prompt}
-          </Text>
-        </View>
-
-        {/* Tags */}
-        {item.tags && item.tags?.length > 0 && (
-          <View className="flex-row flex-wrap mb-3">
-            {item.tags?.slice(0, 3).map((tag, idx) => (
-              <View key={idx} className="flex-row items-center bg-gray-100 px-2 py-1 rounded mr-2 mb-2">
-                <Tag size={10} color="#6B7280" />
-                <Text className="text-xs text-gray-600 ml-1">{tag}</Text>
-              </View>
-            ))}
-            {item.tags && item.tags.length > 3 && (
-              <View className="bg-gray-100 px-2 py-1 rounded mb-2">
-                <Text className="text-xs text-gray-600">+{item.tags.length - 3}</Text>
-              </View>
-            )}
-          </View>
-        )}
 
         {/* Stats Row */}
         <View className="flex-row items-center justify-between mb-2">
@@ -227,27 +204,7 @@ export default function HomeScreen() {
     </Card>
   );
 
-  // if (isLoading) {
-  //   return <LoadingSpinner fullScreen />;
-  // }
 
-  // if (error) {
-  //   return (
-  //     <View className="flex-1 justify-center items-center px-6 bg-white">
-  //       <Text className="text-xl font-bold text-gray-900 mb-2 text-center">
-  //         Unable to load prompts
-  //       </Text>
-  //       <Text className="text-base text-gray-600 mb-6 text-center">
-  //         {error}
-  //       </Text>
-  //       <Button
-  //         title="Try Again"
-  //         onPress={() => fetchPrompts()}
-  //         variant="primary"
-  //       />
-  //     </View>
-  //   );
-  // }
 
   return (
     <View className="flex-1 bg-gray-50">
@@ -318,6 +275,21 @@ export default function HomeScreen() {
           </View>
         )}
       />
+
+      {/* Floating Action Button */}
+      <TouchableOpacity
+        className="absolute bottom-6 right-6 bg-blue-600 w-14 h-14 rounded-full items-center justify-center shadow-lg"
+        onPress={() => router.push('/(other)/create-prompt')}
+        style={{
+          elevation: 8,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: 0.3,
+          shadowRadius: 4,
+        }}
+      >
+        <Plus size={28} color="#FFFFFF" />
+      </TouchableOpacity>
     </View>
   );
 }

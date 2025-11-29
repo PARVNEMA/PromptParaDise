@@ -22,7 +22,7 @@ export const PromptService = {
   try {
     const response = await apiService.post('/prompt',PromptData);
     console.log("response of post prompts",response);
-    return response.data;
+    return response;
   } catch (error) {
     console.error('Error post prompts:', error);
     throw error;
@@ -33,7 +33,7 @@ export const PromptService = {
   try {
     const response = await apiService.get('/prompt/userPrompts');
     console.log("response of getall User prompts",response);
-    return response.data;
+    return response;
   } catch (error) {
     console.error('Error fetching User prompts:', error);
     throw error;

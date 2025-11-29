@@ -5,7 +5,7 @@ export const CategoryService = {
   try {
     const response = await apiService.get('/category');
     console.log("response of getall categories",response);
-    return response.data;
+    return response;
   } catch (error) {
     console.error('Error fetching categories:', error);
     throw error;
