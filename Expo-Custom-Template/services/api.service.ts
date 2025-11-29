@@ -168,9 +168,9 @@ class ApiService {
   // Public methods
   async get<T = any>(url: string, config?: AxiosRequestConfig): Promise<T> {
     const response = await this.retryRequest(() =>
-      this.client.get<ApiResponse<T> | T>(url, config)
+      this.client.get<T>(url, config)
     );
-    return (response.data as ApiResponse<T>).data || (response.data as T);
+    return response.data;
   }
 
   async post<T = any>(

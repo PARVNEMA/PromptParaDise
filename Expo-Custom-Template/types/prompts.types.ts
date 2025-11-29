@@ -4,7 +4,13 @@ export interface PromptResponse {
   data: Prompt[]
   error: any
 }
-
+export interface PromptDataProps{
+  title: string
+  prompt: string
+  description: string
+  category: string
+  image:string
+}
 export interface Prompt {
   _id: string
   title: string

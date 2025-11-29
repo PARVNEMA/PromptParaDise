@@ -40,7 +40,6 @@ export const createPrompt = catchAsync(async (req, res) => {
 		201,
 		true,
 		"Prompt created successfully",
-		newPrompt
 	);
 });
 export const getAllPrompts = catchAsync(
@@ -60,10 +59,17 @@ export const getAllPrompts = catchAsync(
 				],
 			})
 			.skip(index)
-			.limit(top);
+			.limit(top).select("-bookmarks  -likes -tags");
 
 		if (prompts.length === 0) {
-			throw new ApiError("No prompts found", 404);
+			sendResponse(
+				res,
+				404,
+				true,
+				"No prompts found",
+				[]
+			);
+			return;
 		}
 
 		sendResponse(
@@ -85,13 +91,17 @@ export const getAllUserPrompts = catchAsync(
 				creator: req.id,
 			})
 			.skip(index)
-			.limit(top);
+			.limit(top).select("-bookmarks  -likes -tags");;
 
 		if (prompts.length === 0) {
-			throw new ApiError(
+			sendResponse(
+				res,
+				404,
+				true,
 				"No prompts found for the user",
-				404
+				[]
 			);
+			return;
 		}
 
 		sendResponse(

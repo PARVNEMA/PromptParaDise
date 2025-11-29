@@ -30,6 +30,9 @@ export const MainLayout = () => {
         <Stack.Protected guard={isAuthenticated}>
           <Stack.Screen name="(tabs)" />
         </Stack.Protected>
+        <Stack.Protected guard={isAuthenticated}>
+          <Stack.Screen name="(other)" />
+        </Stack.Protected>
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style="auto" />
