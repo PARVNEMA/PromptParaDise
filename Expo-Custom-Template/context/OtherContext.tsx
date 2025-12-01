@@ -49,6 +49,7 @@ export const OtherContextProvider = ({ children }: { children: React.ReactNode }
 
  // Refetch user data from server
  const refetchUserData = useCallback(async () => {
+  console.log("refetched user data bookmarks and likes")
    await Promise.all([getUserBookmarks(), getUserLikes()]);
  }, []);
 

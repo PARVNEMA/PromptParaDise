@@ -19,7 +19,7 @@ const PromptCard: React.FC<PromptCardProps> = ({ item, onLike, onBookmark }) => 
   const isBookmarked = useMemo(
     () => {
       const result = userBookmarks.some((bookmark) => bookmark.id === item.id || bookmark._id === item._id);
-      console.log(`🟢 [${item.title?.substring(0, 20)}] isBookmarked:`, result, 'userBookmarks:', userBookmarks.length);
+      // console.log(`🟢 [${item.title?.substring(0, 20)}] isBookmarked:`, result, 'userBookmarks:', userBookmarks.length);
       return result;
     },
     [userBookmarks, item.id, item._id]
@@ -28,7 +28,7 @@ const PromptCard: React.FC<PromptCardProps> = ({ item, onLike, onBookmark }) => 
   const isLiked = useMemo(
     () => {
       const result = userLikes.some((like) => like.id === item.id || like._id === item._id);
-      console.log(`🟢 [${item.title?.substring(0, 20)}] isLiked:`, result, 'userLikes:', userLikes.length);
+      // console.log(`🟢 [${item.title?.substring(0, 20)}] isLiked:`, result, 'userLikes:', userLikes.length);
       return result;
     },
     [userLikes, item.id, item._id]
