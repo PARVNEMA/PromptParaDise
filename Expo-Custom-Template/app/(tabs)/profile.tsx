@@ -3,7 +3,6 @@ import {
   View,
   Text,
   ScrollView,
-  SafeAreaView,
   Image,
   TouchableOpacity,
   Alert,
@@ -79,7 +78,7 @@ export default function ProfileScreen() {
   ];
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-50">
+    <View className="flex-1 bg-gray-50">
       {/* Header */}
       <View className="bg-white px-4 py-4 border-b border-gray-200">
         <Text className="text-2xl font-bold text-gray-900">Profile</Text>
@@ -95,18 +94,12 @@ export default function ProfileScreen() {
           <View className="items-center">
             {/* Profile Picture */}
             <View className="relative mb-4">
-              {user?.avatar ? (
-                <Image
-                  source={{ uri: user.avatar }}
-                  className="w-24 h-24 rounded-full"
-                />
-              ) : (
                 <View className="w-24 h-24 bg-blue-500 rounded-full items-center justify-center">
-                  <Text className="text-white text-2xl font-bold">
+                  <Text className="text-blue text-2xl font-bold">
                     {user?.name?.charAt(0) || 'U'}
                   </Text>
                 </View>
-              )}
+
               <TouchableOpacity
                 className="absolute bottom-0 right-0 bg-white rounded-full p-2 shadow-lg border border-gray-200"
                 onPress={handleEditProfile}
@@ -204,6 +197,6 @@ export default function ProfileScreen() {
           />
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }

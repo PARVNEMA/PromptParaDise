@@ -10,6 +10,9 @@ import { sendResponse } from "../utils/responsehandler.js";
 import promptModel from "../models/prompt.model.js";
 
 export const createPrompt = catchAsync(async (req, res) => {
+	console.log("createPrompt headers content-type:", req.headers['content-type']);
+	console.log("createPrompt body:", req.body);
+	console.log("createPrompt file:", req.file);
 	const { title, prompt, description, category } = req.body;
 	if (!title || !prompt || !description || !category) {
 		throw new ApiError("All fields are required", 400);
@@ -17,7 +20,11 @@ export const createPrompt = catchAsync(async (req, res) => {
 	const image = req.file;
 	let imageUrl;
 	if (image) {
+		console.log("Attempting to upload image to Cloudinary...");
 		imageUrl = await uploadMedia(image.path);
+		console.log("Cloudinary upload result:", imageUrl);
+	} else {
+		console.log("No image file received in req.file");
 	}
 	const newPrompt = await promptModel.create({
 		title,

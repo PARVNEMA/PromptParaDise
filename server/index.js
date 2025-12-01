@@ -13,6 +13,7 @@ import userRoute from "./routes/user.route.js";
 import categoryRoute from "./routes/category.route.js";
 import healthRoute from "./routes/health.route.js";
 import promptRoute from "./routes/prompt.route.js";
+import aiRoute from "./routes/ai.route.js";
 import connectDB, { getDBStatus } from "./database/db.js";
 dotenv.config();
 
@@ -112,6 +113,7 @@ app.use(
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/prompt", promptRoute);
 app.use("/api/v1/category", categoryRoute);
+app.use("/api/v1/ai", aiRoute);
 app.use("/health", healthRoute);
 
 // ? it should be at the bottom as it always accept teh request and never go to the controllers

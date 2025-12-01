@@ -13,6 +13,12 @@ cloudinary.config({
 	cloud_name: process.env.CLOUD_NAME,
 });
 
+console.log("Cloudinary Config Check:", {
+	hasApiKey: !!process.env.API_KEY,
+	hasApiSecret: !!process.env.API_SECRET,
+	hasCloudName: !!process.env.CLOUD_NAME,
+});
+
 export const uploadMedia = async (file) => {
 	try {
 		const uploadResponse = await cloudinary.uploader.upload(

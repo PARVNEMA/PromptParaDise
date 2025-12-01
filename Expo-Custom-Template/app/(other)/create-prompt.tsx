@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import { router } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
-import { Camera, X, Upload, ArrowLeft } from 'lucide-react-native';
+import { Camera, X, Upload, ArrowLeft, Sparkles } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { PromptService } from '@/services/prompt.service';
@@ -34,6 +34,7 @@ export default function CreatePromptScreen() {
   const [image, setImage] = useState<string | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isEnhancing, setIsEnhancing] = useState(false);
   const [isFetchingCategories, setIsFetchingCategories] = useState(true);
 
   useEffect(() => {
@@ -139,22 +140,57 @@ export default function CreatePromptScreen() {
     return true;
   };
 
+  const handleEnhance = async () => {
+    if (!prompt.trim()) {
+      Alert.alert('Empty Prompt', 'Please enter some text to enhance.');
+      return;
+    }
+
+    try {
+      setIsEnhancing(true);
+
+
+      const enhancedText = await PromptService.promptEnhancer(prompt);
+
+      if (enhancedText) {
+        setPrompt(enhancedText);
+      } else {
+        Alert.alert('Error', 'Failed to enhance prompt');
+      }
+    } catch (error) {
+      console.error('Error enhancing prompt:', error);
+      Alert.alert('Error', 'Failed to connect to AI service');
+    } finally {
+      setIsEnhancing(false);
+    }
+  };
+
   const handleSubmit = async () => {
     if (!validateForm()) return;
 
     try {
       setIsLoading(true);
 
-      const promptData = {
-        title: title.trim(),
-        prompt: prompt.trim(),
-        description: description.trim(),
-        category: selectedCategory,
-        image: image || '',
-      };
+      const formData = new FormData();
+      formData.append('title', title.trim());
+      formData.append('prompt', prompt.trim());
+      formData.append('description', description.trim());
+      formData.append('category', selectedCategory);
 
-      console.log('Submitting prompt:', promptData);
-      const response = await PromptService.postPrompts(promptData);
+      if (image) {
+        const filename = image.split('/').pop() || 'image.jpg';
+        const match = /\.(\w+)$/.exec(filename);
+        const type = match ? `image/${match[1]}` : 'image/jpeg';
+
+        formData.append('image', {
+          uri: image,
+          name: filename,
+          type,
+        } as any);
+      }
+
+      console.log('Submitting prompt:', formData);
+      const response = await PromptService.postPrompts(formData);
       console.log('Prompt created:', response);
 
       Alert.alert('Success', 'Prompt created successfully!', [
@@ -205,6 +241,7 @@ export default function CreatePromptScreen() {
                 value={title}
                 onChangeText={setTitle}
                 maxLength={100}
+                editable={!isLoading && !isEnhancing}
               />
               <Text className="text-xs text-gray-500 mt-1">
                 {title.length}/100
@@ -213,9 +250,29 @@ export default function CreatePromptScreen() {
 
             {/* Prompt Content Input */}
             <View className="mb-4">
-              <Text className="text-sm font-semibold text-gray-700 mb-2">
-                Prompt Content *
-              </Text>
+              <View className="flex-row justify-between items-center mb-2">
+                <Text className="text-sm font-semibold text-gray-700">
+                  Prompt Content *
+                </Text>
+                <TouchableOpacity
+                  onPress={handleEnhance}
+                  disabled={isEnhancing}
+                  className={`flex-row items-center px-4 py-2 rounded-full shadow-sm ${
+                    isEnhancing ? 'bg-purple-400' : 'bg-purple-600'
+                  }`}
+                >
+                  {isEnhancing ? (
+                    <ActivityIndicator size="small" color="#FFFFFF" />
+                  ) : (
+                    <>
+                      <Sparkles size={16} color="#FFFFFF" />
+                      <Text className="text-white text-xs font-bold ml-2">
+                        Magic Enhance
+                      </Text>
+                    </>
+                  )}
+                </TouchableOpacity>
+              </View>
               <TextInput
                 className="bg-gray-100 rounded-lg px-4 py-3 text-base text-gray-900"
                 placeholder="Enter your prompt here..."
@@ -226,6 +283,7 @@ export default function CreatePromptScreen() {
                 numberOfLines={6}
                 textAlignVertical="top"
                 maxLength={2000}
+                editable={!isLoading && !isEnhancing}
               />
               <Text className="text-xs text-gray-500 mt-1">
                 {prompt.length}/2000
@@ -247,6 +305,7 @@ export default function CreatePromptScreen() {
                 numberOfLines={4}
                 textAlignVertical="top"
                 maxLength={500}
+                editable={!isLoading && !isEnhancing}
               />
               <Text className="text-xs text-gray-500 mt-1">
                 {description.length}/500
