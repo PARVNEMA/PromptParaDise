@@ -16,9 +16,11 @@ import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import PromptCard from '@/components/cards/PromptCard';
 import { Prompt } from '@/types/prompts.types';
 import { PromptService } from '@/services/prompt.service';
+import { useOtherContext } from '@/context/OtherContext';
 
 export default function HomeScreen() {
   const { user } = useAuth();
+  const { userBookmarks, userLikes, optimisticToggleLike, optimisticToggleBookmark, refetchUserData } = useOtherContext();
   const [isLoading, setIsLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState('');
@@ -36,7 +38,7 @@ export default function HomeScreen() {
       }
 
       const response = await PromptService.getAllPrompts(search, pageIndex, pageSize);
-      console.log('Prompts fetched:', response);
+      // console.log('Prompts fetched:', response);
 
       if (response.success && response.data) {
         if (append) {
@@ -92,17 +94,111 @@ export default function HomeScreen() {
     }
   }, [isLoading, hasMore, page, searchQuery, fetchPrompts]);
 
-  const handleLike = (promptId: string) => {
-    Alert.alert('Like', `Liked prompt: ${promptId}`, [{ text: 'OK' }]);
+  const handleLike = async (promptId: string) => {
+    console.log('🔵 handleLike called with promptId:', promptId);
+
+    // Find the prompt to pass to optimistic update
+    const prompt = prompts.find(p => p.id === promptId || p._id === promptId);
+    if (!prompt) {
+      console.error('❌ Prompt not found for optimistic update');
+      return;
+    }
+
+    // OPTIMISTIC UPDATE - Update UI immediately
+    optimisticToggleLike(prompt);
+
+    try {
+      const res = await PromptService.toggleLike(promptId);
+      console.log('🔵 Toggle like response:', res);
+
+      if (res) {
+        // Update the local prompts state with the server response
+        setPrompts(prev => prev.map(p =>
+          p._id === promptId || p.id === promptId
+            ? {
+                ...p,
+                likeCount: res.likeCount,
+              }
+            : p
+        ));
+
+        // Sync with server to ensure consistency
+        // The context is already updated optimistically, but we refetch to be sure
+        // await refetchUserData();
+
+        // Alert.alert(
+        //   'Success',
+        //   res.isLiked ? 'Prompt liked!' : 'Like removed!',
+        //   [{ text: 'OK' }]
+        // );
+      } else {
+        // If server request failed, revert the optimistic update
+        console.error('❌ Server returned error, reverting optimistic update');
+        await refetchUserData();
+        Alert.alert('Error', res.message || 'Failed to toggle like', [{ text: 'OK' }]);
+      }
+    } catch (error) {
+      console.log("❌ error in toggling the like", error);
+      // Revert optimistic update on error
+      await refetchUserData();
+      Alert.alert('Error', 'Failed to toggle like', [{ text: 'OK' }]);
+    }
   };
 
-  const handleBookmark = (promptId: string) => {
-    Alert.alert('Bookmark', `Bookmarked prompt: ${promptId}`, [{ text: 'OK' }]);
+  const handleBookmark = async(promptId: string) => {
+    console.log('🟣 handleBookmark called with promptId:', promptId);
+
+    // Find the prompt to pass to optimistic update
+    const prompt = prompts.find(p => p.id === promptId || p._id === promptId);
+    if (!prompt) {
+      console.error('❌ Prompt not found for optimistic update');
+      return;
+    }
+
+    // OPTIMISTIC UPDATE - Update UI immediately
+    optimisticToggleBookmark(prompt);
+
+    try {
+      const res = await PromptService.toggleBookmark(promptId);
+      console.log('🟣 Toggle bookmark response:', res);
+
+      if (res) {
+        // Update the local prompts state with the server response
+        setPrompts(prev => prev.map(p =>
+          p._id === promptId || p.id === promptId
+            ? {
+                ...p,
+                bookmarkCount: res.bookmarkCount,
+              }
+            : p
+        ));
+
+        // Sync with server to ensure consistency
+        // await refetchUserData();
+
+        Alert.alert(
+          'Success',
+          res.isBookmarked ? 'Prompt bookmarked!' : 'Bookmark removed!',
+          [{ text: 'OK' }]
+        );
+      } else {
+        // If server request failed, revert the optimistic update
+        console.error('❌ Server returned error, reverting optimistic update');
+        await refetchUserData();
+        Alert.alert('Error', 'Failed to toggle bookmark', [{ text: 'OK' }]);
+      }
+    } catch (error) {
+      console.log("❌ error in toggling the bookmark", error);
+      // Revert optimistic update on error
+      await refetchUserData();
+      Alert.alert('Error', 'Failed to toggle bookmark', [{ text: 'OK' }]);
+    }
   };
 
-  const renderPromptCard = ({ item }: { item: Prompt }) => (
-    <PromptCard item={item} onLike={handleLike} onBookmark={handleBookmark} />
-  );
+  const renderPromptCard = ({ item }: { item: Prompt }) => {
+
+    return <PromptCard item={item} onLike={handleLike} onBookmark={handleBookmark}  />
+  };
 
 
 

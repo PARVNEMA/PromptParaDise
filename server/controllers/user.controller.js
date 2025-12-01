@@ -2,12 +2,14 @@ import {
 	ApiError,
 	catchAsync,
 } from "../middleware/error.middleware.js";
+import promptModel from "../models/prompt.model.js";
 import { User } from "../models/user.model.js";
 import {
 	deleteMediaFromCloudinary,
 	uploadMedia,
 } from "../utils/cloudinary.js";
 import { generateToken } from "../utils/generateToken.js";
+import { sendResponse } from "../utils/responsehandler.js";
 
 export const createUserAccount = catchAsync(
 	async (req, res) => {
@@ -139,3 +141,13 @@ export const updateUserProfile = catchAsync(
 		});
 	}
 );
+
+export const getUserBookmarks = catchAsync(async (req, res) => {
+    const bookMarkedPrompts= await promptModel.find({bookmarks: req.id}).select("-tags")
+
+		if(!bookMarkedPrompts){
+			sendResponse(res, 404, false, "No bookmarks found")
+		}
+
+		sendResponse(res, 200, true, "Bookmarks retrieved successfully", bookMarkedPrompts)
+});

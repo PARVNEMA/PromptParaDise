@@ -9,6 +9,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import ErrorBoundary from '@/components/ui/ErrorBoundary';
 import * as SplashScreen from 'expo-splash-screen';
 import UpdateModal from '@/components/ui/UpdateModal';
+import { OtherContextProvider } from '@/context/OtherContext';
 
 SplashScreen.preventAutoHideAsync();
 export const MainLayout = () => {
@@ -79,13 +80,16 @@ export default function RootLayout() {
   return (
     <ErrorBoundary>
       <AuthProvider>
+        <OtherContextProvider>
+
         <MainLayout />
         <UpdateModal
           visible={isUpdateModalVisible}
           onDownload={handleDownloadUpdate}
           onCancel={handleCancelUpdate}
           isDownloading={isDownloadingUpdate}
-        />
+          />
+          </OtherContextProvider>
       </AuthProvider>
     </ErrorBoundary>
   );

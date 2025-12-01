@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
 import { router } from 'expo-router';
 import { Heart, Bookmark, Eye, Calendar } from 'lucide-react-native';
 import Card from '@/components/ui/Card';
 import { Prompt } from '@/types/prompts.types';
+import { useOtherContext } from '@/context/OtherContext';
 
 interface PromptCardProps {
   item: Prompt;
@@ -12,6 +13,27 @@ interface PromptCardProps {
 }
 
 const PromptCard: React.FC<PromptCardProps> = ({ item, onLike, onBookmark }) => {
+  const { userBookmarks, userLikes } = useOtherContext();
+
+  // Use useMemo to reactively compute these values when context changes
+  const isBookmarked = useMemo(
+    () => {
+      const result = userBookmarks.some((bookmark) => bookmark.id === item.id || bookmark._id === item._id);
+      console.log(`🟢 [${item.title?.substring(0, 20)}] isBookmarked:`, result, 'userBookmarks:', userBookmarks.length);
+      return result;
+    },
+    [userBookmarks, item.id, item._id]
+  );
+
+  const isLiked = useMemo(
+    () => {
+      const result = userLikes.some((like) => like.id === item.id || like._id === item._id);
+      console.log(`🟢 [${item.title?.substring(0, 20)}] isLiked:`, result, 'userLikes:', userLikes.length);
+      return result;
+    },
+    [userLikes, item.id, item._id]
+  );
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const now = new Date();
@@ -117,7 +139,8 @@ const PromptCard: React.FC<PromptCardProps> = ({ item, onLike, onBookmark }) => 
           >
             <Heart
               size={18}
-              color={item.likes?.length > 0 ? '#EF4444' : '#6B7280'}
+              color={isLiked ? '#EF4444' : '#6B7280'}
+              fill={isLiked ? '#EF4444' : 'none'}
             />
             <Text className="text-gray-600 ml-2 font-medium">Like</Text>
           </TouchableOpacity>
@@ -131,7 +154,8 @@ const PromptCard: React.FC<PromptCardProps> = ({ item, onLike, onBookmark }) => 
           >
             <Bookmark
               size={18}
-              color={item.bookmarks?.length > 0 ? '#3B82F6' : '#6B7280'}
+              color={isBookmarked ? '#3B82F6' : '#6B7280'}
+              fill={isBookmarked ? '#3B82F6' : 'none'}
             />
             <Text className="text-gray-600 ml-2 font-medium">Save</Text>
           </TouchableOpacity>

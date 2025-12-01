@@ -3,6 +3,7 @@ import {
 	authenticateUser,
 	createUserAccount,
 	getCurrentUserProfile,
+	getUserBookmarks,
 	SignoutUser,
 	updateUserProfile,
 } from "../controllers/user.controller.js";
@@ -15,7 +16,7 @@ const router = Router();
 router.post("/signup", validateSignUp, createUserAccount);
 router.post("/signin", authenticateUser);
 router.post("/signout", isAuthenticated, SignoutUser);
-
+router.get("/bookmarks", isAuthenticated, getUserBookmarks);
 // Profile routes
 router.get(
 	"/profile",

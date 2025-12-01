@@ -49,5 +49,49 @@ export const PromptService = {
     console.error('Error fetching User prompts:', error);
     throw error;
   }
+ },
+
+ toggleLike: async(id: string): Promise<any> => {
+  try {
+    const response = await apiService.post(`/prompt/toggleLike/${id}`, {});
+    console.log("response of toggle like", response);
+    return response;
+  } catch (error) {
+    console.error('Error toggling like:', error);
+    throw error;
+  }
+ },
+
+ toggleBookmark: async(id: string): Promise<any> => {
+  try {
+    const response = await apiService.post(`/prompt/toggleBookmark/${id}`, {});
+    console.log("response of toggle bookmark", response);
+    return response;
+  } catch (error) {
+    console.error('Error toggling bookmark:', error);
+    throw error;
+  }
+ },
+
+ UserBookmarks: async(): Promise<PromptResponse> => {
+  try {
+    const response = await apiService.get('/user/bookmarks');
+    console.log("response of user bookmark", response);
+    return response;
+  } catch (error) {
+    console.error('Error getting user bookmark:', error);
+    throw error;
+  }
+ },
+
+ UserLikes: async(): Promise<PromptResponse> => {
+  try {
+    const response = await apiService.get('/prompt/userLikes');
+    console.log("response of user likes", response);
+    return response;
+  } catch (error) {
+    console.error('Error getting user likes:', error);
+    throw error;
+  }
  }
 }

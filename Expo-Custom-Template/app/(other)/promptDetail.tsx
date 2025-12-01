@@ -6,10 +6,9 @@ import {
   TouchableOpacity,
   Alert,
   Dimensions,
-  ActivityIndicator,
   Share,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useLocalSearchParams, router } from 'expo-router';
 import * as Clipboard from 'expo-clipboard';
 import {
@@ -28,6 +27,7 @@ import { PromptService } from '@/services/prompt.service';
 import { DetailPromptDetails } from '@/types/prompts.types';
 import Card from '@/components/ui/Card';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import { useOtherContext } from '@/context/OtherContext';
 
 const { width, height } = Dimensions.get('window');
 
@@ -36,6 +36,24 @@ const PromptDetail = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isCopied, setIsCopied] = useState(false);
   const { id } = useLocalSearchParams();
+  const { userBookmarks, userLikes, optimisticToggleLike, optimisticToggleBookmark } = useOtherContext();
+
+  // Check if current prompt is liked/bookmarked
+  const isLiked = useMemo(
+    () => {
+      if (!data) return false;
+      return userLikes.some((like) => like.id === data.id || like._id === data._id);
+    },
+    [userLikes, data]
+  );
+
+  const isBookmarked = useMemo(
+    () => {
+      if (!data) return false;
+      return userBookmarks.some((bookmark) => bookmark.id === data.id || bookmark._id === data._id);
+    },
+    [userBookmarks, data]
+  );
 
   const fetchPromptDetails = async () => {
     try {
@@ -73,6 +91,58 @@ const PromptDetail = () => {
       });
     } catch (error) {
       console.error('Error sharing:', error);
+    }
+  };
+
+  const handleLike = async () => {
+    if (!data) return;
+
+    // OPTIMISTIC UPDATE - Update UI immediately
+    optimisticToggleLike(data);
+
+    try {
+      const res = await PromptService.toggleLike(data.id || data._id);
+      console.log('🔵 Toggle like response:', res);
+
+      if (res) {
+        // Update the local data state with the server response
+        setData(prev => prev ? {
+          ...prev,
+          likeCount: res.likeCount,
+        } : null);
+      } else {
+        console.error('❌ Server returned error');
+        Alert.alert('Error', 'Failed to toggle like');
+      }
+    } catch (error) {
+      console.log("❌ error in toggling the like", error);
+      Alert.alert('Error', 'Failed to toggle like');
+    }
+  };
+
+  const handleBookmark = async () => {
+    if (!data) return;
+
+    // OPTIMISTIC UPDATE - Update UI immediately
+    optimisticToggleBookmark(data);
+
+    try {
+      const res = await PromptService.toggleBookmark(data.id || data._id);
+      console.log('🟣 Toggle bookmark response:', res);
+
+      if (res) {
+        // Update the local data state with the server response
+        setData(prev => prev ? {
+          ...prev,
+          bookmarkCount: res.bookmarkCount,
+        } : null);
+      } else {
+        console.error('❌ Server returned error');
+        Alert.alert('Error', 'Failed to toggle bookmark');
+      }
+    } catch (error) {
+      console.log("❌ error in toggling the bookmark", error);
+      Alert.alert('Error', 'Failed to toggle bookmark');
     }
   };
 
@@ -115,7 +185,6 @@ const PromptDetail = () => {
             <TouchableOpacity
               onPress={() => router.back()}
               className="bg-white/20 backdrop-blur-lg rounded-full p-2"
-
             >
               <ArrowLeft size={24} color="#FFFFFF" />
             </TouchableOpacity>
@@ -123,7 +192,6 @@ const PromptDetail = () => {
             <TouchableOpacity
               onPress={handleShare}
               className="bg-white/20 backdrop-blur-lg rounded-full p-2"
-
             >
               <Share2 size={24} color="#FFFFFF" />
             </TouchableOpacity>
@@ -272,21 +340,31 @@ const PromptDetail = () => {
           {/* Action Buttons */}
           <View className="flex-row mb-6">
             <TouchableOpacity
-              className="flex-1 bg-red-50 border border-red-200 rounded-lg py-4 mr-2 items-center"
-              onPress={() => Alert.alert('Like', 'Like functionality coming soon!')}
+              className={`flex-1 ${isLiked ? 'bg-red-100' : 'bg-red-50'} border ${isLiked ? 'border-red-400' : 'border-red-200'} rounded-lg py-4 mr-2 items-center`}
+              onPress={handleLike}
             >
-              <Heart size={24} color="#EF4444" />
-              <Text className="text-red-600 font-semibold mt-2">Like</Text>
+              <Heart
+                size={24}
+                color="#EF4444"
+                fill={isLiked ? '#EF4444' : 'none'}
+              />
+              <Text className="text-red-600 font-semibold mt-2">
+                {isLiked ? 'Liked' : 'Like'}
+              </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-              className="flex-1 bg-blue-50 border border-blue-200 rounded-lg py-4 ml-2 items-center"
-              onPress={() =>
-                Alert.alert('Bookmark', 'Bookmark functionality coming soon!')
-              }
+              className={`flex-1 ${isBookmarked ? 'bg-blue-100' : 'bg-blue-50'} border ${isBookmarked ? 'border-blue-400' : 'border-blue-200'} rounded-lg py-4 ml-2 items-center`}
+              onPress={handleBookmark}
             >
-              <Bookmark size={24} color="#3B82F6" />
-              <Text className="text-blue-600 font-semibold mt-2">Save</Text>
+              <Bookmark
+                size={24}
+                color="#3B82F6"
+                fill={isBookmarked ? '#3B82F6' : 'none'}
+              />
+              <Text className="text-blue-600 font-semibold mt-2">
+                {isBookmarked ? 'Saved' : 'Save'}
+              </Text>
             </TouchableOpacity>
           </View>
 

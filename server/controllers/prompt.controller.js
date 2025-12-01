@@ -59,7 +59,8 @@ export const getAllPrompts = catchAsync(
 				],
 			})
 			.skip(index)
-			.limit(top).select("-bookmarks  -likes -tags");
+			.limit(top)
+			.select("-tags");
 
 		if (prompts.length === 0) {
 			sendResponse(
@@ -91,7 +92,8 @@ export const getAllUserPrompts = catchAsync(
 				creator: req.id,
 			})
 			.skip(index)
-			.limit(top).select("-bookmarks  -likes -tags");;
+			.limit(top)
+			.select("-tags");
 
 		if (prompts.length === 0) {
 			sendResponse(
@@ -119,10 +121,78 @@ export const getPromptById = catchAsync(async (req, res) => {
 	if(!id){
 		throw new ApiError(" prompt id not found", 400);
 	}
-	const prompt = await promptModel.findById(id).select("-bookmarks  -likes -tags");
+	const prompt = await promptModel.findById(id).select("-tags");
 	if (!prompt) {
 		sendResponse(res, 404, true, "Prompt not found");
 		return;
 	}
 	sendResponse(res, 200, true, "Prompt retrieved successfully", prompt);
+});
+
+export const toggleLike = catchAsync(async (req, res) => {
+	const { id } = req.params;
+	if (!id) {
+		throw new ApiError("Prompt id not found", 400);
+	}
+	const prompt = await promptModel.findById(id);
+	if (!prompt) {
+		sendResponse(res, 404, true, "Prompt not found");
+		return;
+	}
+	if (prompt.likes.some(id => id.toString() === req.id)) {
+		prompt.likes = prompt.likes.filter(
+			(id) => id.toString() !== req.id
+		);
+	} else {
+		prompt.likes.push(req.id);
+	}
+	await prompt.save();
+
+	// Return updated prompt with counts
+	const updatedPrompt = await promptModel.findById(id).select("-tags");
+	sendResponse(res, 200, true, "Like toggled successfully", {
+		likeCount: updatedPrompt.likeCount,
+		bookmarkCount: updatedPrompt.bookmarkCount,
+		isLiked: updatedPrompt.likes.some(id => id.toString() === req.id)
+	});
+});
+export const toggleBookmark = catchAsync(async (req, res) => {
+	const { id } = req.params;
+	if (!id) {
+		throw new ApiError("Prompt id not found", 400);
+	}
+	const prompt = await promptModel.findById(id);
+	if (!prompt) {
+		sendResponse(res, 404, true, "Prompt not found");
+		return;
+	}
+	if (prompt.bookmarks.some(id => id.toString() === req.id)) {
+		prompt.bookmarks = prompt.bookmarks.filter(
+			(id) => id.toString() !== req.id
+		);
+	} else {
+		prompt.bookmarks.push(req.id);
+	}
+	await prompt.save();
+
+	// Return updated prompt with counts
+	const updatedPrompt = await promptModel.findById(id).select("-tags");
+	sendResponse(res, 200, true, "Bookmark toggled successfully", {
+		likeCount: updatedPrompt.likeCount,
+		bookmarkCount: updatedPrompt.bookmarkCount,
+		isBookmarked: updatedPrompt.bookmarks.some(id => id.toString() === req.id)
+	});
+});
+
+export const getUserLikes = catchAsync(async (req, res) => {
+	const prompts = await promptModel.find({
+		likes: { $in: [req.id] }
+	}).select("-tags");
+
+	if (prompts.length === 0) {
+		sendResponse(res, 404, true, "No liked prompts found", []);
+		return;
+	}
+
+	sendResponse(res, 200, true, "Liked prompts retrieved successfully", prompts);
 });
