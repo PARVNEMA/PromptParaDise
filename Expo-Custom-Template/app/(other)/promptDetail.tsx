@@ -231,7 +231,7 @@ const PromptDetail = () => {
           <View className="flex-row items-center mb-3">
             <View className="bg-blue-600 px-4 py-2 rounded-full">
               <Text className="text-white font-bold text-sm">
-                {data.category}
+                {data.category.name}
               </Text>
             </View>
             {data.isFeatured && (
@@ -247,7 +247,10 @@ const PromptDetail = () => {
           <Text className="text-3xl font-bold text-gray-900 mb-3">
             {data.title}
           </Text>
-
+     <View className='flex-1 flex-row gap-2 my-2 items-center'>
+ <Image source={{uri:data.creator.avatar}} className='w-12 h-12 rounded-full'/>
+ <Text className='text-lg font-semibold'>{data.creator.name}</Text>
+     </View>
           {/* Stats Row */}
           <View className="flex-row items-center mb-6 flex-wrap">
             <View className="flex-row items-center mr-4 mb-2">

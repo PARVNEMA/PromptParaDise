@@ -17,8 +17,8 @@ export interface DetailPromptDetails {
   prompt: string
   description: string
   imageUrl: string
-  category: string
-  creator: string
+  category: {name:string}
+  creator: PromptCreator
   views: number
   isPublic: boolean
   isFeatured: boolean
@@ -29,15 +29,19 @@ export interface DetailPromptDetails {
   bookmarkCount: number
   id: string
 }
-
+export interface PromptCreator{
+  name: string
+  avatar: string
+  id:string
+}
 export interface Prompt {
   _id: string
   title: string
   prompt: string
   description: string
   tags: any[]
-  category: string
-  creator: string
+  category: {name:string}
+  creator: PromptCreator
   likes: any[]
   bookmarks: any[]
   views: number

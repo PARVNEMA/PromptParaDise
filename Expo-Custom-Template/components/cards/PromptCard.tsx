@@ -78,7 +78,7 @@ const PromptCard: React.FC<PromptCardProps> = ({ item, onLike, onBookmark }) => 
           <View className="flex-row items-center mb-2">
             <View className="bg-blue-100 px-3 py-1 rounded-full">
               <Text className="text-blue-700 font-semibold text-xs">
-                {item.category}
+                {item.category.name}
               </Text>
             </View>
             {item.isFeatured && (
@@ -99,6 +99,12 @@ const PromptCard: React.FC<PromptCardProps> = ({ item, onLike, onBookmark }) => 
           <Text className="text-sm text-gray-600 mb-3" numberOfLines={2}>
             {item.description}
           </Text>
+          <View className='flex-row items-center gap-2 mb-2'>
+     <Image source={{uri:item.creator.avatar}} className='w-10 h-10 rounded-full'/>
+          <Text className="text-md text-gray-600 mb-3" numberOfLines={2}>
+            {item.creator.name}
+          </Text>
+          </View>
 
           {/* Stats Row */}
           <View className="flex-row items-center justify-between mb-2">

@@ -67,7 +67,7 @@ export const getAllPrompts = catchAsync(
 			})
 			.skip(index)
 			.limit(top)
-			.select("-tags");
+			.select("-tags").populate({path:"creator",select:"name avatar"}).populate({path:"category",select:"name"});
 
 		if (prompts.length === 0) {
 			sendResponse(
@@ -100,7 +100,7 @@ export const getAllUserPrompts = catchAsync(
 			})
 			.skip(index)
 			.limit(top)
-			.select("-tags");
+			.select("-tags").populate({path:"creator",select:"name avatar"}).populate({path:"category",select:"name"});
 
 		if (prompts.length === 0) {
 			sendResponse(
@@ -128,7 +128,7 @@ export const getPromptById = catchAsync(async (req, res) => {
 	if(!id){
 		throw new ApiError(" prompt id not found", 400);
 	}
-	const prompt = await promptModel.findById(id).select("-tags");
+	const prompt = await promptModel.findById(id).select("-tags").populate({path:"creator",select:"name avatar"}).populate({path:"category",select:"name"});
 	if (!prompt) {
 		sendResponse(res, 404, true, "Prompt not found");
 		return;
