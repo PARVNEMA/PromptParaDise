@@ -47,9 +47,12 @@ export const PromptService = {
     throw error;
   }
  },
- getUserPrompts : async():Promise<PromptResponse>=>{
+ getUserPrompts : async({index,top}:any):Promise<PromptResponse>=>{
   try {
-    const response = await apiService.get('/prompt/userPrompts');
+    const params = new URLSearchParams();
+    params.append('index', index.toString());
+    params.append('top', top.toString());
+    const response = await apiService.get(`/prompt/userPrompts?${params.toString()}`);
     console.log("response of getall User prompts",response);
     return response;
   } catch (error) {

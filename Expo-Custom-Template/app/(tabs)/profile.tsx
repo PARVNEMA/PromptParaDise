@@ -20,6 +20,7 @@ import {
 import { useAuth } from '@/context/AuthContext';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
+import { router } from 'expo-router';
 
 export default function ProfileScreen() {
   const { user, logout } = useAuth();
@@ -66,8 +67,8 @@ export default function ProfileScreen() {
     },
     {
       icon: <SettingsIcon size={20} color="#6B7280" />,
-      title: 'Account Settings',
-      onPress: () => Alert.alert('Settings', 'Settings would open here'),
+      title: 'Userprompts',
+      onPress: () => router.push('/user-prompt'),
     },
     {
       icon: <Award size={20} color="#6B7280" />,
