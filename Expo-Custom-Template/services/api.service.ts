@@ -184,6 +184,23 @@ class ApiService {
     return (response.data as ApiResponse<T>).data || (response.data as T);
   }
 
+  async postFormData<T = any>(
+    url: string,
+    formData: FormData,
+    config?: AxiosRequestConfig
+  ): Promise<T> {
+    const response = await this.retryRequest(() =>
+      this.client.post<ApiResponse<T> | T>(url, formData, {
+        ...config,
+        headers: {
+          ...config?.headers,
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+    );
+    return (response.data as ApiResponse<T>).data || (response.data as T);
+  }
+
   async put<T = any>(
     url: string,
     data?: any,

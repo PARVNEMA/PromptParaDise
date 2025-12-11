@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema(
 
 		avatar: {
 			type: String,
-			default: "default-avatar.png",
+			default: "https://res.cloudinary.com/dfw2v6xqo/image/upload/v1764864631/Gemini_Generated_Image_6n2cqa6n2cqa6n2c_xzktpy.png",
 		},
 
 		bio: {

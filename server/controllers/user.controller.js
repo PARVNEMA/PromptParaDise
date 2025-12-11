@@ -14,6 +14,7 @@ import { sendResponse } from "../utils/responsehandler.js";
 export const createUserAccount = catchAsync(
 	async (req, res) => {
 		const { name, email, password } = req.body;
+		console.log("Request body:", req.body);
 
 		// we will do validaitons globally
 
@@ -25,10 +26,23 @@ export const createUserAccount = catchAsync(
 			throw new ApiError("user already exists", 400);
 		}
 
+		const image = req.file;
+		console.log("image", image);
+
+			let imageUrl;
+			if (image) {
+				console.log("Attempting to upload image to Cloudinary...");
+				imageUrl = await uploadMedia(image.path);
+				console.log("Cloudinary upload result:", imageUrl);
+			} else {
+				console.log("No image file received in req.file");
+			}
+
 		const user = await User.create({
 			name,
 			email: email.toLowerCase(),
 			password,
+			avatar: imageUrl?.secure_url,
 		});
 
 		generateToken(res, user, "account created hogya");
@@ -56,7 +70,7 @@ export const authenticateUser = catchAsync(
 		generateToken(
 			res,
 			existingUser,
-			`welcome back ${existingUser.name} Chacha 💸💸👌👌`
+			`welcome back ${existingUser.name} `
 		);
 	}
 );

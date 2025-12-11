@@ -28,6 +28,8 @@ class AuthService {
 
         return res;
       }
+
+      throw new Error('Login failed');
     } catch (error) {
       throw new Error(
         'Login failed. Please check your credentials and try again.'
@@ -38,21 +40,49 @@ class AuthService {
   async register(credentials: RegisterCredentials): Promise<SignInProps> {
     try {
       console.log('Register attempt with:', credentials);
-      const res=await apiService.post('/user/signup', credentials);
-      console.log('Register response:', res);
-      if(res.success){
 
-        await SecureStore.setItemAsync(AUTH_CONFIG.TOKEN_KEY, res.token);
+      let response;
 
+      if (credentials.avatar) {
+        // Create FormData for multipart/form-data request
+        const formData = new FormData();
+        formData.append('name', credentials.name);
+        formData.append('email', credentials.email);
+        formData.append('password', credentials.password);
 
+        // Extract filename from URI
+        const uriParts = credentials.avatar.split('/');
+        const fileName = uriParts[uriParts.length - 1];
+
+        // Append the image file
+        formData.append('avatar', {
+          uri: credentials.avatar,
+          type: 'image/jpeg', // You can make this dynamic based on file extension
+          name: fileName,
+        } as any);
+
+        console.log('Sending FormData with avatar...');
+        response = await apiService.postFormData('/user/signup', formData);
+      } else {
+        // Send regular JSON request
+        const { avatar, ...credentialsWithoutAvatar } = credentials;
+        response = await apiService.post('/user/signup', credentialsWithoutAvatar);
+      }
+
+      console.log('Register response:', response);
+
+      if (response.success) {
+        await SecureStore.setItemAsync(AUTH_CONFIG.TOKEN_KEY, response.token);
         await SecureStore.setItemAsync(
           AUTH_CONFIG.USER_KEY,
-          JSON.stringify(res.user)
+          JSON.stringify(response.user)
         );
-
-        return res;
+        return response;
       }
+
+      throw new Error('Registration failed');
     } catch (error) {
+      console.error('Registration error:', error);
       throw new Error('Registration failed. Please try again.');
     }
   }

@@ -13,7 +13,7 @@ import { validateSignUp } from "../middleware/validation.middleware.js";
 
 const router = Router();
 
-router.post("/signup", validateSignUp, createUserAccount);
+router.post("/signup", upload.single("avatar"), validateSignUp, createUserAccount);
 router.post("/signin", authenticateUser);
 router.post("/signout", isAuthenticated, SignoutUser);
 router.get("/bookmarks", isAuthenticated, getUserBookmarks);

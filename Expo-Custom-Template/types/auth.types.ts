@@ -27,6 +27,7 @@ export interface RegisterCredentials {
   name: string;
   email: string;
   password: string;
+  avatar?: string; // URI of the selected image
 }
 
 export interface AuthResponse {

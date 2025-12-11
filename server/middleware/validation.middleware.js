@@ -6,6 +6,7 @@ import {
 	query,
 	validationResult,
 } from "express-validator";
+import { ApiError } from "./error.middleware.js";
 
 export const validate = (validations) => {
 	return async (req, res, next) => {
@@ -56,11 +57,16 @@ export const commonValdation = {
 		.trim()
 		.isLength({ min: 2, max: 100 })
 		.withMessage("PLease provide a valid name "),
+
+	password: body("password")
+		.isLength({ min: 6 })
+		.withMessage("Password must be at least 6 characters"),
 };
 
 export const validateSignUp = validate([
 	commonValdation.email,
 	commonValdation.name,
+	commonValdation.password,
 ]);
 
 // todo Validation

@@ -1,13 +1,16 @@
-import React from 'react';
-import { View, Text, Alert } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, Alert, TouchableOpacity, Image } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+
+import * as ImagePicker from 'expo-image-picker'
 import {
   User,
   Mail,
   Lock,
   CircleCheck as CheckCircle,
+  Camera,
 } from 'lucide-react-native';
 
 import Input from '@/components/ui/Input';
@@ -51,6 +54,8 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
   onSubmit,
   loading = false,
 }) => {
+  const [avatarUri, setAvatarUri] = useState<string | null>(null);
+
   const {
     control,
     handleSubmit,
@@ -66,11 +71,43 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
     },
   });
 
+  const pickImage = async () => {
+    try {
+      // Request permission
+      const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+      if (permissionResult.granted === false) {
+        Alert.alert('Permission Required', 'Permission to access camera roll is required!');
+        return;
+      }
+
+      // Launch image picker
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 0.8,
+      });
+
+      if (!result.canceled && result.assets[0]) {
+        setAvatarUri(result.assets[0].uri);
+      }
+    } catch (error) {
+      console.error('Error picking image:', error);
+      Alert.alert('Error', 'Failed to pick image. Please try again.');
+    }
+  };
+
   const handleFormSubmit = async (data: RegisterCredentials) => {
     try {
-      console.log('Register Form Data:', data);
-      await onSubmit(data);
+      const registrationData = {
+        ...data,
+        avatar: avatarUri || undefined,
+      };
+      console.log('Register Form Data:', registrationData);
+      await onSubmit(registrationData);
       reset();
+      setAvatarUri(null);
     } catch (error: any) {
       Alert.alert(
         'Registration Failed',
@@ -83,6 +120,31 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
   return (
     <KeyboardAvoidingWrapper className="p-4 w-full flex-1">
       <View className="w-full space-y-4">
+        {/* Avatar Picker */}
+        <View className="items-center mb-4">
+          <Text className="text-sm font-medium text-gray-700 mb-3">Profile Picture (Optional)</Text>
+          <TouchableOpacity
+            onPress={pickImage}
+            className="relative"
+            activeOpacity={0.7}
+          >
+            <View className="w-24 h-24 rounded-full bg-gray-200 items-center justify-center overflow-hidden border-2 border-green-500">
+              {avatarUri ? (
+                <Image
+                  source={{ uri: avatarUri }}
+                  className="w-full h-full"
+                  resizeMode="cover"
+                />
+              ) : (
+                <User size={40} color="#9CA3AF" />
+              )}
+            </View>
+            <View className="absolute bottom-0 right-0 bg-green-600 rounded-full p-2 border-2 border-white">
+              <Camera size={16} color="white" />
+            </View>
+          </TouchableOpacity>
+        </View>
+
         <Controller
           control={control}
           name="name"
