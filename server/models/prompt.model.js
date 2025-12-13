@@ -109,4 +109,45 @@ PromptSchema.index({ creator: 1, isPublic: 1 });
 PromptSchema.index({ tags: 1 });
 PromptSchema.index({ createdAt: -1 });
 
+// Middleware to update category promptCount when a new prompt is added
+PromptSchema.post("save", async function (doc) {
+	try {
+		// Only increment if this is a new document (not an update)
+		if (this.isNew) {
+			await mongoose.model("Category").findByIdAndUpdate(
+				doc.category,
+				{ $inc: { promptCount: 1 } }
+			);
+		}
+	} catch (error) {
+		console.error("Error updating category promptCount on save:", error);
+	}
+});
+
+// Middleware to update category promptCount when a prompt is deleted
+PromptSchema.post("remove", async function (doc) {
+	try {
+		await mongoose.model("Category").findByIdAndUpdate(
+			doc.category,
+			{ $inc: { promptCount: -1 } }
+		);
+	} catch (error) {
+		console.error("Error updating category promptCount on remove:", error);
+	}
+});
+
+// Middleware to handle findOneAndDelete and similar operations
+PromptSchema.post("findOneAndDelete", async function (doc) {
+	try {
+		if (doc) {
+			await mongoose.model("Category").findByIdAndUpdate(
+				doc.category,
+				{ $inc: { promptCount: -1 } }
+			);
+		}
+	} catch (error) {
+		console.error("Error updating category promptCount on findOneAndDelete:", error);
+	}
+});
+
 export default mongoose.model("Prompt", PromptSchema);

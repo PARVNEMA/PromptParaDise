@@ -19,6 +19,7 @@ import { Prompt } from '@/types/prompts.types';
 import Card from '@/components/ui/Card';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import PromptCard from '@/components/cards/PromptCard';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const Category = () => {
   const [categories, setCategories] = useState<CategoryCardProp[]>([]);
@@ -183,16 +184,15 @@ const Category = () => {
       <View className="flex-1 bg-gray-50">
         {/* Header */}
         <View className="bg-white px-4 py-4 border-b border-gray-200">
-          <TouchableOpacity
+
+
+          <View className="flex-row items-center  gap-2">
+             <TouchableOpacity
             onPress={handleBackToCategories}
             className="mb-3"
           >
-            <Text className="text-blue-600 font-semibold text-base">
-              ← Back to Categories
-            </Text>
+            <MaterialIcons name="arrow-back" size={24} color="black" />
           </TouchableOpacity>
-
-          <View className="flex-row items-center">
             <Image
               source={{ uri: selectedCat?.icon }}
               className="w-10 h-10 mr-2"

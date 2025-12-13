@@ -51,6 +51,7 @@ export const getAllCategories = catchAsync(
 			isActive: true,
 		}).sort({ createdAt: -1 });
 
+
 		sendResponse(
 			res,
 			200,
@@ -71,6 +72,7 @@ export const getCategoryProducts = catchAsync(
 		if (!category) {
 			throw new ApiError("Category not found", 404);
 		}
+		await Category.recalculatePromptCount(id);
 		const products = await promptModel.find({
 			category: id,
 		}).select("--bookmarks  -likes -tags ");

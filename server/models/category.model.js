@@ -56,4 +56,17 @@ CategorySchema.pre("save", function (next) {
 	next();
 });
 
+// Static method to recalculate promptCount for a category
+CategorySchema.statics.recalculatePromptCount = async function (categoryId) {
+	try {
+		const Prompt = mongoose.model("Prompt");
+		const count = await Prompt.countDocuments({ category: categoryId });
+		await this.findByIdAndUpdate(categoryId, { promptCount: count });
+		return count;
+	} catch (error) {
+		console.error("Error recalculating prompt count:", error);
+		throw error;
+	}
+};
+
 export default mongoose.model("Category", CategorySchema);
