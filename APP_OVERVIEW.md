@@ -29,7 +29,6 @@
 - **Create & Organize**: Store your own prompts with images and categorization
 - **Discover**: Browse a curated feed of prompts from the community
 - **Engage**: Like and bookmark prompts for future reference
-- **Connect**: View profiles and discover content from other creators
 
 ---
 
@@ -589,3 +588,4 @@ EXPO_PUBLIC_API_URL=http://localhost:3000/api
 ---
 
 *Last Updated: December 2024*
+
