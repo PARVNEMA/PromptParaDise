@@ -91,18 +91,20 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, loading = false }) => {
             leftIcon={<Lock size={20} color="#6B7280" />}
             secureTextEntry
             autoComplete="password"
+
           />
         )}
       />
 
-      <View className="pt-2">
+      <View className="pt-4">
         <Button
           title="Sign In"
           onPress={handleSubmit(handleFormSubmit)}
           loading={loading}
           fullWidth
           size="lg"
-          variant="secondary"
+          variant="primary"
+
         />
       </View>
 

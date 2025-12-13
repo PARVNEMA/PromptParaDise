@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Alert, TouchableOpacity, Image } from 'react-native';
+import { View, Text, Alert, TouchableOpacity, Image, Platform } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -18,6 +18,7 @@ import Button from '@/components/ui/Button';
 import { RegisterCredentials } from '@/types/auth.types';
 import { VALIDATION_RULES } from '@/config/constants';
 import KeyboardAvoidingWrapper from '../ui/KeyboardAvoidingWrapper';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 
 const registerSchema = z
   .object({
@@ -54,7 +55,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
   onSubmit,
   loading = false,
 }) => {
-  const [avatarUri, setAvatarUri] = useState<string | null>(null);
+  const [avatarUri, setAvatarUri] = useState<string | null>("https://lh3.googleusercontent.com/aida-public/AB6AXuCCMteedPmb1x_RwwXJvb1q2eyu1jdBYFeIt8AAUci1Oq_f5jNZDnlWwMlTW81R3V8_scFJIxm9XRDUKOsVTQcx6P3XzSo5cJ_i_socTs_2CMFASkuWyeL7Ps8509AmL_4jIlGBbXxyy2eceDSxv_67_YoUnvczbflh3T5klSDRCUNm4Dd57SSLwO1dKmPQDlEoeSFNsJf1P6it-GTDfxe1lfTBImLBbk8mICiHyK-6iDjkFHbxW0A34Lxesf4AjW82EUPZ_YvGJcls");
 
   const {
     control,
@@ -118,7 +119,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
   };
 
   return (
-    <KeyboardAvoidingWrapper className="p-4 w-full flex-1">
+    <KeyboardAwareScrollView className="p-4 w-full flex-1"
+    keyboardShouldPersistTaps="handled"
+    >
       <View className="w-full space-y-4">
         {/* Avatar Picker */}
         <View className="items-center mb-4">
@@ -202,16 +205,18 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
 
 
 
-        <View className="pt-2">
+        <View className="pt-6">
           <Button
             title="Create Account"
             onPress={handleSubmit(handleFormSubmit)}
             loading={loading}
             fullWidth
+            variant="primary"
+            size="lg"
           />
         </View>
       </View>
-    </KeyboardAvoidingWrapper>
+    </KeyboardAwareScrollView>
   );
 };
 

@@ -15,6 +15,8 @@ import Card from '@/components/ui/Card';
 import { LoginCredentials } from '@/types/auth.types';
 import { APP_CONFIG } from '@/config/constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { MaterialIcons } from '@expo/vector-icons';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 
 export default function LoginScreen() {
   const { login } = useAuth();
@@ -36,48 +38,49 @@ export default function LoginScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-gradient-to-br from-blue-50 to-blue-100">
-      <KeyboardAvoidingView
+    <SafeAreaView className="flex-1 bg-white">
+      <KeyboardAwareScrollView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        className="flex-1"
+        className="flex-1 pt-20"
+        keyboardShouldPersistTaps="handled"
       >
-        <ScrollView
-          contentContainerClassName="flex-grow justify-center px-6 py-8"
-          keyboardShouldPersistTaps="handled"
+        <View
+          className="flex-grow justify-center px-3 "
         >
           {/* Header */}
-          <View className="items-center mb-8">
-            <View className="w-16 h-16 bg-blue-600 rounded-full items-center justify-center mb-4">
-              <Text className="text-white text-2xl font-bold">
-                {APP_CONFIG.NAME.charAt(0)}
+          <View className="flex-col items-center text-center gap-4">
+            {/* Logo Mark */}
+            <View className="-rotate-3 bg-primary-100 rounded-xl flex items-center justify-center border-2 border-text-main shadow-hard w-16 h-16">
+              <MaterialIcons name="auto-awesome" size={32} color="#1c1c0d" />
+            </View>
+            <View className="space-y-1">
+              <Text className="text-text-main dark:text-text-main-dark tracking-tight text-3xl font-bold">
+                PromptParaDise
+              </Text>
+              <Text className="text-text-main/80 dark:text-text-main-dark/80 text-base font-normal">
+                Ignite your creativity.
               </Text>
             </View>
-            <Text className="text-3xl font-bold text-gray-900 mb-2">
-              Welcome Back
-            </Text>
-            <Text className="text-base text-gray-600 text-center">
-              Sign in to your account to continue
-            </Text>
           </View>
 
           {/* Login Form */}
-          <Card variant="elevated" padding="lg">
+          <View className="p-6">
             <LoginForm onSubmit={handleLogin} loading={isLoading} />
-          </Card>
+          </View>
 
           {/* Register Link */}
-          <View className="items-center mt-6">
-            <Text className="text-base text-gray-600">
-              Don't have an account?{' '}
+          <View className="pt-4 text-center items-center">
+            <Text className="text-text-main dark:text-text-main-dark text-base">
+              New to PromptParaDise?{' '}
               <Link href="/(auth)/register" asChild>
-                <TouchableOpacity>
-                  <Text className="text-blue-600 font-semibold">Sign up</Text>
+                <TouchableOpacity className=''>
+                  <Text className="font-bold underline decoration-primary decoration-2 underline-offset-2 hover:text-primary">Sign up</Text>
                 </TouchableOpacity>
               </Link>
             </Text>
           </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
+        </View>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 }

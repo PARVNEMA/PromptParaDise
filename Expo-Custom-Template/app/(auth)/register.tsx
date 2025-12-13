@@ -16,6 +16,8 @@ import { RegisterCredentials } from '@/types/auth.types';
 import { APP_CONFIG } from '@/config/constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import RegisterForm from '@/components/forms/RegisterForm';
+import { MaterialIcons } from '@expo/vector-icons';
+import {KeyboardAwareScrollView} from "react-native-keyboard-controller"
 
 export default function RegisterScreen() {
   const { register } = useAuth();
@@ -34,21 +36,17 @@ export default function RegisterScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-gradient-to-br from-green-50 to-green-100">
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    <SafeAreaView className="flex-1 bg-white">
+      <KeyboardAwareScrollView
         className="flex-1"
+           keyboardShouldPersistTaps="handled"
       >
-        <ScrollView
-          contentContainerClassName="flex-grow justify-center px-6 py-8"
-          keyboardShouldPersistTaps="handled"
+        <View
         >
           {/* Header */}
-          <View className="items-center mb-8">
-            <View className="w-16 h-16 bg-green-600 rounded-full items-center justify-center mb-4">
-              <Text className="text-white text-2xl font-bold">
-                {APP_CONFIG.NAME.charAt(0)}
-              </Text>
+          <View className="items-center mb-4">
+             <View className="-rotate-3 bg-primary-100 rounded-xl flex items-center justify-center border-2 border-text-main shadow-hard w-16 h-16">
+              <MaterialIcons name="auto-awesome" size={32} color="#1c1c0d" />
             </View>
             <Text className="text-3xl font-bold text-gray-900 mb-2">
               Create Account
@@ -59,9 +57,9 @@ export default function RegisterScreen() {
           </View>
 
           {/* Register Form */}
-          <Card variant="elevated" padding="lg">
+          <View className="bg-white rounded-xl ">
             <RegisterForm onSubmit={handleRegister} loading={isLoading} />
-          </Card>
+          </View>
 
           {/* Login Link */}
           <View className="items-center mt-6">
@@ -69,13 +67,13 @@ export default function RegisterScreen() {
               Already have an account?{' '}
               <Link href="/(auth)/login" asChild>
                 <TouchableOpacity>
-                  <Text className="text-green-600 font-semibold">Sign in</Text>
+                  <Text className="text-primary font-semibold">Sign in</Text>
                 </TouchableOpacity>
               </Link>
             </Text>
           </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
+        </View>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 }
