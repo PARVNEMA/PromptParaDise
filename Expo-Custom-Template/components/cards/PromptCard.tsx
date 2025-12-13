@@ -56,117 +56,107 @@ const PromptCard: React.FC<PromptCardProps> = ({ item, onLike, onBookmark }) => 
           params: { id: item.id },
         })
       }
+      className="mb-6 mx-4"
     >
-      <Card variant="elevated" className="mb-4 mx-4">
+      <View className="bg-white dark:bg-card-dark rounded-[2rem] shadow-lg overflow-hidden border border-gray-100 dark:border-white/5">
         {/* Image Section - Only show if imageUrl exists */}
         {item.imageUrl && (
-          <View className="mb-3 rounded-lg overflow-hidden">
+          <View className="relative h-48">
             <Image
               source={{ uri: item.imageUrl }}
-              style={{
-                width: '100%',
-                height: 200,
-                resizeMode: 'contain',
-              }}
+              className="w-full h-full "
+              resizeMode="contain"
             />
-          </View>
-        )}
-
-        {/* Content Section */}
-        <View className="mb-3">
-          {/* Category Badge */}
-          <View className="flex-row items-center mb-2">
-            <View className="bg-blue-100 px-3 py-1 rounded-full">
-              <Text className="text-blue-700 font-semibold text-xs">
+            {/* Category Badge Overlay */}
+            <View className="absolute top-4 right-4 bg-white/90 dark:bg-black/80 backdrop-blur-sm px-3 py-1 rounded-full border border-gray-200 dark:border-white/10">
+              <Text className="text-xs font-bold uppercase text-gray-900 dark:text-white">
                 {item.category.name}
               </Text>
             </View>
             {item.isFeatured && (
-              <View className="bg-yellow-100 px-3 py-1 rounded-full ml-2">
-                <Text className="text-yellow-700 font-semibold text-xs">
+              <View className="absolute top-4 left-4 bg-yellow-400/90 backdrop-blur-sm px-3 py-1 rounded-full border border-yellow-500/20">
+                <Text className="text-xs font-bold uppercase text-gray-900">
                   ⭐ Featured
                 </Text>
               </View>
             )}
           </View>
+        )}
+
+        {/* Content Section */}
+        <View className="p-6">
+          {/* Author Info */}
+          <View className="flex-row justify-between items-center mb-3">
+            <View className="flex-row items-center gap-2">
+              <Image
+                source={{ uri: item.creator.avatar }}
+                className="w-10 h-10 rounded-full"
+
+              />
+              <Text className="text-sm font-medium text-gray-700 ">
+                {item.creator.name}
+              </Text>
+            </View>
+            <Text className="text-xs text-gray-400">
+              {formatDate(item.createdAt)}
+            </Text>
+          </View>
 
           {/* Title */}
-          <Text className="text-lg font-bold text-gray-900 mb-2">
+          <Text className="text-xl font-bold text-gray-900  mb-2">
             {item.title}
           </Text>
 
           {/* Description */}
-          <Text className="text-sm text-gray-600 mb-3" numberOfLines={2}>
+          <Text className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2" numberOfLines={2}>
             {item.description}
           </Text>
-          <View className='flex-row items-center gap-2 mb-2'>
-     <Image source={{uri:item.creator.avatar}} className='w-10 h-10 rounded-full'/>
-          <Text className="text-md text-gray-600 mb-3" numberOfLines={2}>
-            {item.creator.name}
-          </Text>
-          </View>
 
-          {/* Stats Row */}
-          <View className="flex-row items-center justify-between mb-2">
-            <View className="flex-row items-center">
-              <Heart size={14} color="#EF4444" />
-              <Text className="text-xs text-gray-600 ml-1">
-                {item.likeCount || 0}
-              </Text>
+          {/* Stats and Actions Row */}
+          <View className="flex-row justify-between items-center mt-4 pt-4 border-t border-gray-100 dark:border-white/5">
+            <View className="flex-row gap-4">
+              <TouchableOpacity
+                className="flex-row items-center gap-1.5"
+                onPress={(e) => {
+                  e.stopPropagation();
+                  onLike?.(item.id);
+                }}
+              >
+                <Heart
+                  size={18}
+                  color={isLiked ? '#EF4444' : '#9ca3af'}
+                  fill={isLiked ? '#EF4444' : 'none'}
+                />
+                <Text className="text-xs text-gray-500">
+                  {item.likeCount || 0}
+                </Text>
+              </TouchableOpacity>
 
-              <Bookmark size={14} color="#3B82F6" style={{ marginLeft: 12 }} />
-              <Text className="text-xs text-gray-600 ml-1">
-                {item.bookmarkCount || 0}
-              </Text>
-
-              <Eye size={14} color="#6B7280" style={{ marginLeft: 12 }} />
-              <Text className="text-xs text-gray-600 ml-1">
-                {item.views || 0}
-              </Text>
+              <TouchableOpacity
+                className="flex-row items-center gap-1.5"
+                onPress={(e) => {
+                  e.stopPropagation();
+                  onBookmark?.(item.id);
+                }}
+              >
+                <Bookmark
+                  size={18}
+                  color={isBookmarked ? '#3B82F6' : '#9ca3af'}
+                  fill={isBookmarked ? '#3B82F6' : 'none'}
+                />
+                <Text className="text-xs text-gray-500">
+                  {item.bookmarkCount || 0}
+                </Text>
+              </TouchableOpacity>
             </View>
 
-            <View className="flex-row items-center">
-              <Calendar size={12} color="#6B7280" />
-              <Text className="text-xs text-gray-500 ml-1">
-                {formatDate(item.createdAt)}
-              </Text>
+            <View className="flex-row items-center gap-1.5">
+              <Text className="text-xs text-gray-400">View Details</Text>
+              <Text className="text-xs text-gray-400">→</Text>
             </View>
           </View>
         </View>
-
-        {/* Action Buttons */}
-        <View className="flex-row border-t border-gray-200 pt-2">
-          <TouchableOpacity
-            className="flex-row items-center flex-1 justify-center py-2"
-            onPress={(e) => {
-              e.stopPropagation();
-              onLike?.(item.id);
-            }}
-          >
-            <Heart
-              size={18}
-              color={isLiked ? '#EF4444' : '#6B7280'}
-              fill={isLiked ? '#EF4444' : 'none'}
-            />
-            <Text className="text-gray-600 ml-2 font-medium">Like</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            className="flex-row items-center flex-1 justify-center py-2"
-            onPress={(e) => {
-              e.stopPropagation();
-              onBookmark?.(item.id);
-            }}
-          >
-            <Bookmark
-              size={18}
-              color={isBookmarked ? '#3B82F6' : '#6B7280'}
-              fill={isBookmarked ? '#3B82F6' : 'none'}
-            />
-            <Text className="text-gray-600 ml-2 font-medium">Save</Text>
-          </TouchableOpacity>
-        </View>
-      </Card>
+      </View>
     </TouchableOpacity>
   );
 };

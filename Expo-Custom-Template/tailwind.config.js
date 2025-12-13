@@ -93,6 +93,9 @@ module.exports = {
         hard: '4px 4px 0px 0px rgba(28, 28, 13, 1)',
         'hard-sm': '2px 2px 0px 0px rgba(28, 28, 13, 1)',
       },
+      fontFamily: {
+        display: ['Spline Sans', 'Noto Sans', 'sans-serif'],
+      },
     },
   },
   presets: [require('nativewind/preset')],

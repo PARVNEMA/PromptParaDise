@@ -17,6 +17,7 @@ import PromptCard from '@/components/cards/PromptCard';
 import { Prompt } from '@/types/prompts.types';
 import { PromptService } from '@/services/prompt.service';
 import { useOtherContext } from '@/context/OtherContext';
+import Logo from '@/components/ui/Logo';
 
 export default function HomeScreen() {
   const { user } = useAuth();
@@ -205,18 +206,16 @@ export default function HomeScreen() {
   return (
     <View className="flex-1 bg-gray-50">
       {/* Header */}
-      <View className="bg-white px-4 py-4 border-b border-gray-200">
-        <Text className="text-2xl font-bold text-gray-900">
-          Welcome back, {user?.name}! 👋
-        </Text>
-        <Text className="text-base text-gray-600 mt-1">
-          Discover amazing prompts from the community
+      <View className="bg-white px-4 py-4   border-gray-200 flex-row items-center gap-2">
+       <Logo size={22} height={12} width={12}/>
+        <Text className="text-2xl font-bold text-gray-900 mt-1 font-display">
+        PromptParaDise
         </Text>
       </View>
 
       {/* Search Bar */}
       <View className="bg-white px-4 py-3 border-b border-gray-200">
-        <View className="flex-row items-center bg-gray-100 rounded-lg px-3 py-2">
+        <View className="flex-row items-center bg-gray-100 rounded-lg px-3 ">
           <Search size={20} color="#6B7280" />
           <TextInput
             className="flex-1 ml-2 text-base text-gray-900"

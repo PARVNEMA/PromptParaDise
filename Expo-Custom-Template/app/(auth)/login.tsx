@@ -17,6 +17,7 @@ import { APP_CONFIG } from '@/config/constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
+import Logo from '@/components/ui/Logo';
 
 export default function LoginScreen() {
   const { login } = useAuth();
@@ -50,9 +51,7 @@ export default function LoginScreen() {
           {/* Header */}
           <View className="flex-col items-center text-center gap-4">
             {/* Logo Mark */}
-            <View className="-rotate-3 bg-primary-100 rounded-xl flex items-center justify-center border-2 border-text-main shadow-hard w-16 h-16">
-              <MaterialIcons name="auto-awesome" size={32} color="#1c1c0d" />
-            </View>
+            <Logo size={32} height={16} width={16}/>
             <View className="space-y-1">
               <Text className="text-text-main dark:text-text-main-dark tracking-tight text-3xl font-bold">
                 PromptParaDise

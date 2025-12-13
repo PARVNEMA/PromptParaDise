@@ -18,6 +18,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import RegisterForm from '@/components/forms/RegisterForm';
 import { MaterialIcons } from '@expo/vector-icons';
 import {KeyboardAwareScrollView} from "react-native-keyboard-controller"
+import Logo from '@/components/ui/Logo';
 
 export default function RegisterScreen() {
   const { register } = useAuth();
@@ -45,9 +46,7 @@ export default function RegisterScreen() {
         >
           {/* Header */}
           <View className="items-center mb-4">
-             <View className="-rotate-3 bg-primary-100 rounded-xl flex items-center justify-center border-2 border-text-main shadow-hard w-16 h-16">
-              <MaterialIcons name="auto-awesome" size={32} color="#1c1c0d" />
-            </View>
+             <Logo size={32} height={16} width={16}/>
             <Text className="text-3xl font-bold text-gray-900 mb-2">
               Create Account
             </Text>
