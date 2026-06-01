@@ -4,7 +4,7 @@ import {
   Text,
   ScrollView,
   Image,
-  TouchableOpacity,
+  Pressable,
   Alert,
 } from 'react-native';
 import {
@@ -101,12 +101,12 @@ export default function ProfileScreen() {
                   </Text>
                 </View>
 
-              <TouchableOpacity
+              <Pressable
                 className="absolute bottom-0 right-0 bg-white rounded-full p-2 shadow-lg border border-gray-200"
                 onPress={handleEditProfile}
               >
                 <Edit3 size={16} color="#3B82F6" />
-              </TouchableOpacity>
+              </Pressable>
             </View>
 
             {/* User Info */}
@@ -120,49 +120,11 @@ export default function ProfileScreen() {
             </View>
 
             {/* Stats */}
-            <View className="flex-row w-full justify-around py-4 border-t border-gray-200">
-              {stats.map((stat, index) => (
-                <View key={index} className="items-center">
-                  <Text className="text-xl font-bold text-gray-900">
-                    {stat.value}
-                  </Text>
-                  <Text className="text-sm text-gray-600">{stat.label}</Text>
-                </View>
-              ))}
-            </View>
+
           </View>
         </Card>
 
-        {/* Account Details */}
-        <Card variant="elevated" className="mx-4 mb-4">
-          <Text className="text-lg font-semibold text-gray-900 mb-4">
-            Account Details
-          </Text>
 
-          <View className="space-y-4">
-            <View className="flex-row items-center">
-              <Calendar size={16} color="#6B7280" />
-              <Text className="text-base text-gray-700 ml-3">
-                Joined{' '}
-                {new Date(user?.createdAt || Date.now()).toLocaleDateString()}
-              </Text>
-            </View>
-
-            <View className="flex-row items-center">
-              <MapPin size={16} color="#6B7280" />
-              <Text className="text-base text-gray-700 ml-3">
-                San Francisco, CA
-              </Text>
-            </View>
-
-            <View className="flex-row items-center">
-              <Award size={16} color="#6B7280" />
-              <Text className="text-base text-gray-700 ml-3">
-                {user?.role === 'admin' ? 'Administrator' : 'Member'}
-              </Text>
-            </View>
-          </View>
-        </Card>
 
         {/* Menu Items */}
         <Card variant="elevated" className="mx-4 mb-4">
@@ -171,7 +133,7 @@ export default function ProfileScreen() {
           </Text>
 
           {menuItems.map((item, index) => (
-            <TouchableOpacity
+            <Pressable
               key={index}
               className="flex-row items-center py-3 border-b border-gray-100 last:border-b-0"
               onPress={item.onPress}
@@ -181,7 +143,7 @@ export default function ProfileScreen() {
                 {item.title}
               </Text>
               <Text className="text-gray-400">→</Text>
-            </TouchableOpacity>
+            </Pressable>
           ))}
         </Card>
 

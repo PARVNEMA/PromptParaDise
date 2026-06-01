@@ -3,7 +3,7 @@ import {
   Text,
   ScrollView,
   Image,
-  TouchableOpacity,
+  Pressable,
   Alert,
   Dimensions,
   Share,
@@ -37,24 +37,27 @@ const PromptDetail = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isCopied, setIsCopied] = useState(false);
   const { id } = useLocalSearchParams();
-  const { userBookmarks, userLikes, optimisticToggleLike, optimisticToggleBookmark } = useOtherContext();
+  const {
+    userBookmarks,
+    userLikes,
+    optimisticToggleLike,
+    optimisticToggleBookmark,
+  } = useOtherContext();
 
   // Check if current prompt is liked/bookmarked
-  const isLiked = useMemo(
-    () => {
-      if (!data) return false;
-      return userLikes.some((like) => like.id === data.id || like._id === data._id);
-    },
-    [userLikes, data]
-  );
+  const isLiked = useMemo(() => {
+    if (!data) return false;
+    return userLikes.some(
+      (like) => like.id === data.id || like._id === data._id,
+    );
+  }, [userLikes, data]);
 
-  const isBookmarked = useMemo(
-    () => {
-      if (!data) return false;
-      return userBookmarks.some((bookmark) => bookmark.id === data.id || bookmark._id === data._id);
-    },
-    [userBookmarks, data]
-  );
+  const isBookmarked = useMemo(() => {
+    if (!data) return false;
+    return userBookmarks.some(
+      (bookmark) => bookmark.id === data.id || bookmark._id === data._id,
+    );
+  }, [userBookmarks, data]);
 
   const fetchPromptDetails = async () => {
     try {
@@ -108,16 +111,20 @@ const PromptDetail = () => {
 
       if (res) {
         // Update the local data state with the server response
-        setData(prev => prev ? {
-          ...prev,
-          likeCount: res.likeCount,
-        } : null);
+        setData((prev) =>
+          prev
+            ? {
+                ...prev,
+                likeCount: res.likeCount,
+              }
+            : null,
+        );
       } else {
         console.error('❌ Server returned error');
         Alert.alert('Error', 'Failed to toggle like');
       }
     } catch (error) {
-      console.log("❌ error in toggling the like", error);
+      console.log('❌ error in toggling the like', error);
       Alert.alert('Error', 'Failed to toggle like');
     }
   };
@@ -134,16 +141,20 @@ const PromptDetail = () => {
 
       if (res) {
         // Update the local data state with the server response
-        setData(prev => prev ? {
-          ...prev,
-          bookmarkCount: res.bookmarkCount,
-        } : null);
+        setData((prev) =>
+          prev
+            ? {
+                ...prev,
+                bookmarkCount: res.bookmarkCount,
+              }
+            : null,
+        );
       } else {
         console.error('❌ Server returned error');
         Alert.alert('Error', 'Failed to toggle bookmark');
       }
     } catch (error) {
-      console.log("❌ error in toggling the bookmark", error);
+      console.log('❌ error in toggling the bookmark', error);
       Alert.alert('Error', 'Failed to toggle bookmark');
     }
   };
@@ -165,12 +176,12 @@ const PromptDetail = () => {
     return (
       <View className="flex-1 justify-center items-center bg-gray-50">
         <Text className="text-lg text-gray-600">Prompt not found</Text>
-        <TouchableOpacity
+        <Pressable
           onPress={() => router.back()}
           className="mt-4 px-6 py-3 bg-blue-600 rounded-lg"
         >
           <Text className="text-white font-semibold">Go Back</Text>
-        </TouchableOpacity>
+        </Pressable>
       </View>
     );
   }
@@ -180,7 +191,7 @@ const PromptDetail = () => {
       {/* Floating Header */}
       <View className="absolute top-12 left-0 right-0 z-10 px-2 ">
         <View className="flex-row items-center justify-between">
-          <TouchableOpacity
+          <Pressable
             onPress={() => router.back()}
             className="bg-white/95 backdrop-blur-lg rounded-full p-3 shadow-lg"
             style={{
@@ -192,9 +203,9 @@ const PromptDetail = () => {
             }}
           >
             <ArrowLeft size={24} color="#1F2937" />
-          </TouchableOpacity>
+          </Pressable>
 
-          <TouchableOpacity
+          <Pressable
             onPress={handleShare}
             className="bg-white/95 backdrop-blur-lg rounded-full p-3 shadow-lg"
             style={{
@@ -206,7 +217,7 @@ const PromptDetail = () => {
             }}
           >
             <Share2 size={24} color="#1F2937" />
-          </TouchableOpacity>
+          </Pressable>
         </View>
       </View>
 
@@ -226,7 +237,10 @@ const PromptDetail = () => {
         )}
 
         {/* Content Section */}
-        <View className="px-5 py-6" style={{ marginTop: data.imageUrl ? 0 : 80 }}>
+        <View
+          className="px-5 py-6"
+          style={{ marginTop: data.imageUrl ? 0 : 80 }}
+        >
           {/* Category & Featured Badges */}
           <View className="flex-row items-center mb-4">
             <View className="bg-gradient-to-r from-blue-500 to-blue-600 px-4 py-2 rounded-full shadow-sm">
@@ -310,7 +324,7 @@ const PromptDetail = () => {
               <Text className="text-xs font-bold text-gray-500 uppercase tracking-widest">
                 Prompt
               </Text>
-              <TouchableOpacity
+              <Pressable
                 onPress={copyToClipboard}
                 className={`flex-row items-center px-5 py-2.5 rounded-full ${
                   isCopied ? 'bg-green-500' : 'bg-blue-600'
@@ -338,7 +352,7 @@ const PromptDetail = () => {
                     </Text>
                   </>
                 )}
-              </TouchableOpacity>
+              </Pressable>
             </View>
 
             {/* Prompt Content */}
@@ -354,7 +368,7 @@ const PromptDetail = () => {
 
           {/* Action Buttons */}
           <View className="flex-row mb-6 gap-3">
-            <TouchableOpacity
+            <Pressable
               className={`flex-1 rounded-2xl py-5 items-center ${
                 isLiked ? 'bg-red-500' : 'bg-white border-2 border-red-200'
               }`}
@@ -372,14 +386,18 @@ const PromptDetail = () => {
                 color={isLiked ? '#FFFFFF' : '#EF4444'}
                 fill={isLiked ? '#FFFFFF' : 'none'}
               />
-              <Text className={`font-bold mt-2 ${isLiked ? 'text-white' : 'text-red-600'}`}>
+              <Text
+                className={`font-bold mt-2 ${isLiked ? 'text-white' : 'text-red-600'}`}
+              >
                 {isLiked ? 'Liked' : 'Like'}
               </Text>
-            </TouchableOpacity>
+            </Pressable>
 
-            <TouchableOpacity
+            <Pressable
               className={`flex-1 rounded-2xl py-5 items-center ${
-                isBookmarked ? 'bg-blue-500' : 'bg-white border-2 border-blue-200'
+                isBookmarked
+                  ? 'bg-blue-500'
+                  : 'bg-white border-2 border-blue-200'
               }`}
               onPress={handleBookmark}
               style={{
@@ -395,10 +413,12 @@ const PromptDetail = () => {
                 color={isBookmarked ? '#FFFFFF' : '#3B82F6'}
                 fill={isBookmarked ? '#FFFFFF' : 'none'}
               />
-              <Text className={`font-bold mt-2 ${isBookmarked ? 'text-white' : 'text-blue-600'}`}>
+              <Text
+                className={`font-bold mt-2 ${isBookmarked ? 'text-white' : 'text-blue-600'}`}
+              >
                 {isBookmarked ? 'Saved' : 'Save'}
               </Text>
-            </TouchableOpacity>
+            </Pressable>
           </View>
 
           {/* Metadata Card */}
@@ -409,8 +429,12 @@ const PromptDetail = () => {
             <View>
               <View className="flex-row justify-between py-3 border-b border-gray-200">
                 <Text className="text-sm text-gray-600">Status</Text>
-                <View className={`px-3 py-1 rounded-full ${data.isPublic ? 'bg-green-100' : 'bg-gray-200'}`}>
-                  <Text className={`text-xs font-bold ${data.isPublic ? 'text-green-700' : 'text-gray-700'}`}>
+                <View
+                  className={`px-3 py-1 rounded-full ${data.isPublic ? 'bg-green-100' : 'bg-gray-200'}`}
+                >
+                  <Text
+                    className={`text-xs font-bold ${data.isPublic ? 'text-green-700' : 'text-gray-700'}`}
+                  >
                     {data.isPublic ? 'Public' : 'Private'}
                   </Text>
                 </View>

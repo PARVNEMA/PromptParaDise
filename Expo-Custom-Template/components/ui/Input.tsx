@@ -1,11 +1,5 @@
 import React, { forwardRef, useState } from 'react';
-import {
-  TextInput,
-  View,
-  Text,
-  TouchableOpacity,
-  TextInputProps,
-} from 'react-native';
+import { TextInput, View, Text, Pressable, TextInputProps } from 'react-native';
 import { Eye, EyeOff } from 'lucide-react-native';
 
 interface InputProps extends TextInputProps {
@@ -88,7 +82,7 @@ const Input = forwardRef<TextInput, InputProps>(
           />
 
           {secureTextEntry && (
-            <TouchableOpacity
+            <Pressable
               onPress={togglePasswordVisibility}
               className="ml-3"
               hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
@@ -98,7 +92,7 @@ const Input = forwardRef<TextInput, InputProps>(
               ) : (
                 <Eye size={20} color="#6B7280" />
               )}
-            </TouchableOpacity>
+            </Pressable>
           )}
 
           {rightIcon && !secureTextEntry && (

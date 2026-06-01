@@ -5,7 +5,7 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
-  TouchableOpacity,
+  Pressable,
 } from 'react-native';
 import { Link, router, useRouter } from 'expo-router';
 
@@ -40,13 +40,12 @@ export default function RegisterScreen() {
     <SafeAreaView className="flex-1 bg-white">
       <KeyboardAwareScrollView
         className="flex-1"
-           keyboardShouldPersistTaps="handled"
+        keyboardShouldPersistTaps="handled"
       >
-        <View
-        >
+        <View>
           {/* Header */}
           <View className="items-center mb-4">
-             <Logo size={32} height={16} width={16}/>
+            <Logo size={32} height={16} width={16} />
             <Text className="text-3xl font-bold text-gray-900 mb-2">
               Create Account
             </Text>
@@ -65,9 +64,9 @@ export default function RegisterScreen() {
             <Text className="text-base text-gray-600">
               Already have an account?{' '}
               <Link href="/(auth)/login" asChild>
-                <TouchableOpacity>
+                <Pressable>
                   <Text className="text-primary font-semibold">Sign in</Text>
-                </TouchableOpacity>
+                </Pressable>
               </Link>
             </Text>
           </View>

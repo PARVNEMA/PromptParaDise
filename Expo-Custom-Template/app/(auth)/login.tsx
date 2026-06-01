@@ -5,7 +5,7 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
-  TouchableOpacity,
+  Pressable,
 } from 'react-native';
 import { Link, router, useRouter } from 'expo-router';
 
@@ -27,6 +27,8 @@ export default function LoginScreen() {
     try {
       setIsLoading(true);
       const res=await login(credentials);
+      console.log('response in  login', res);
+
       if(res){
 
         router.replace('/(tabs)/home');
@@ -45,13 +47,11 @@ export default function LoginScreen() {
         className="flex-1 pt-20"
         keyboardShouldPersistTaps="handled"
       >
-        <View
-          className="flex-grow justify-center px-3 "
-        >
+        <View className="flex-grow justify-center px-3 ">
           {/* Header */}
           <View className="flex-col items-center text-center gap-4">
             {/* Logo Mark */}
-            <Logo size={32} height={16} width={16}/>
+            <Logo size={40} height={12} width={12} />
             <View className="space-y-1">
               <Text className="text-text-main dark:text-text-main-dark tracking-tight text-3xl font-bold">
                 PromptParaDise
@@ -72,9 +72,11 @@ export default function LoginScreen() {
             <Text className="text-text-main dark:text-text-main-dark text-base">
               New to PromptParaDise?{' '}
               <Link href="/(auth)/register" asChild>
-                <TouchableOpacity className=''>
-                  <Text className="font-bold underline decoration-primary decoration-2 underline-offset-2 hover:text-primary">Sign up</Text>
-                </TouchableOpacity>
+                <Pressable className="">
+                  <Text className="font-bold underline decoration-primary decoration-2 underline-offset-2 hover:text-primary">
+                    Sign up
+                  </Text>
+                </Pressable>
               </Link>
             </Text>
           </View>

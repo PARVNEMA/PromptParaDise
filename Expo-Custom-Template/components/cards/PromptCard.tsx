@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { View, Text, TouchableOpacity, Image } from 'react-native';
+import { View, Text, Pressable, Image } from 'react-native';
 import { router } from 'expo-router';
 import { Heart, Bookmark, Eye, Calendar } from 'lucide-react-native';
 import Card from '@/components/ui/Card';
@@ -12,27 +12,29 @@ interface PromptCardProps {
   onBookmark?: (promptId: string) => void;
 }
 
-const PromptCard: React.FC<PromptCardProps> = ({ item, onLike, onBookmark }) => {
+const PromptCard: React.FC<PromptCardProps> = ({
+  item,
+  onLike,
+  onBookmark,
+}) => {
   const { userBookmarks, userLikes } = useOtherContext();
 
   // Use useMemo to reactively compute these values when context changes
-  const isBookmarked = useMemo(
-    () => {
-      const result = userBookmarks.some((bookmark) => bookmark.id === item.id || bookmark._id === item._id);
-      // console.log(`🟢 [${item.title?.substring(0, 20)}] isBookmarked:`, result, 'userBookmarks:', userBookmarks.length);
-      return result;
-    },
-    [userBookmarks, item.id, item._id]
-  );
+  const isBookmarked = useMemo(() => {
+    const result = userBookmarks.some(
+      (bookmark) => bookmark.id === item.id || bookmark._id === item._id,
+    );
+    // console.log(`🟢 [${item.title?.substring(0, 20)}] isBookmarked:`, result, 'userBookmarks:', userBookmarks.length);
+    return result;
+  }, [userBookmarks, item.id, item._id]);
 
-  const isLiked = useMemo(
-    () => {
-      const result = userLikes.some((like) => like.id === item.id || like._id === item._id);
-      // console.log(`🟢 [${item.title?.substring(0, 20)}] isLiked:`, result, 'userLikes:', userLikes.length);
-      return result;
-    },
-    [userLikes, item.id, item._id]
-  );
+  const isLiked = useMemo(() => {
+    const result = userLikes.some(
+      (like) => like.id === item.id || like._id === item._id,
+    );
+    // console.log(`🟢 [${item.title?.substring(0, 20)}] isLiked:`, result, 'userLikes:', userLikes.length);
+    return result;
+  }, [userLikes, item.id, item._id]);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -49,7 +51,7 @@ const PromptCard: React.FC<PromptCardProps> = ({ item, onLike, onBookmark }) => 
   };
 
   return (
-    <TouchableOpacity
+    <Pressable
       onPress={() =>
         router.push({
           pathname: '/(other)/promptDetail',
@@ -91,7 +93,6 @@ const PromptCard: React.FC<PromptCardProps> = ({ item, onLike, onBookmark }) => 
               <Image
                 source={{ uri: item.creator.avatar }}
                 className="w-10 h-10 rounded-full"
-
               />
               <Text className="text-sm font-medium text-gray-700 ">
                 {item.creator.name}
@@ -108,14 +109,17 @@ const PromptCard: React.FC<PromptCardProps> = ({ item, onLike, onBookmark }) => 
           </Text>
 
           {/* Description */}
-          <Text className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2" numberOfLines={2}>
+          <Text
+            className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2"
+            numberOfLines={2}
+          >
             {item.description}
           </Text>
 
           {/* Stats and Actions Row */}
           <View className="flex-row justify-between items-center mt-4 pt-4 border-t border-gray-100 dark:border-white/5">
             <View className="flex-row gap-4">
-              <TouchableOpacity
+              <Pressable
                 className="flex-row items-center gap-1.5"
                 onPress={(e) => {
                   e.stopPropagation();
@@ -130,9 +134,9 @@ const PromptCard: React.FC<PromptCardProps> = ({ item, onLike, onBookmark }) => 
                 <Text className="text-xs text-gray-500">
                   {item.likeCount || 0}
                 </Text>
-              </TouchableOpacity>
+              </Pressable>
 
-              <TouchableOpacity
+              <Pressable
                 className="flex-row items-center gap-1.5"
                 onPress={(e) => {
                   e.stopPropagation();
@@ -147,7 +151,7 @@ const PromptCard: React.FC<PromptCardProps> = ({ item, onLike, onBookmark }) => 
                 <Text className="text-xs text-gray-500">
                   {item.bookmarkCount || 0}
                 </Text>
-              </TouchableOpacity>
+              </Pressable>
             </View>
 
             <View className="flex-row items-center gap-1.5">
@@ -157,7 +161,7 @@ const PromptCard: React.FC<PromptCardProps> = ({ item, onLike, onBookmark }) => 
           </View>
         </View>
       </View>
-    </TouchableOpacity>
+    </Pressable>
   );
 };
 

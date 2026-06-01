@@ -1,45 +1,50 @@
-import { View, Text, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import { router } from 'expo-router'
-import { ArrowLeft, FileText } from 'lucide-react-native'
-import { PromptService } from '@/services/prompt.service'
-import { Prompt } from '@/types/prompts.types'
-import PromptCard from '@/components/cards/PromptCard'
-
+import {
+  View,
+  Text,
+  FlatList,
+  Pressable,
+  ActivityIndicator,
+} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { router } from 'expo-router';
+import { ArrowLeft, FileText } from 'lucide-react-native';
+import { PromptService } from '@/services/prompt.service';
+import { Prompt } from '@/types/prompts.types';
+import PromptCard from '@/components/cards/PromptCard';
 
 const UserPrompt = () => {
-  const [userPrompts, setUserPrompts] = useState<Prompt[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-const [loadMore, setloadMore] = useState(false);
-const [index, setindex] = useState(1)
-const top = 10;
+  const [userPrompts, setUserPrompts] = useState<Prompt[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadMore, setloadMore] = useState(false);
+  const [index, setindex] = useState(1);
+  const top = 10;
   const fetchAllUserPrompts = async () => {
     try {
-      setIsLoading(true)
-      const res = await PromptService.getUserPrompts({index,top})
+      setIsLoading(true);
+      const res = await PromptService.getUserPrompts({ index, top });
       if (res.success) {
-        console.log("user prompts", res)
-        setUserPrompts([...userPrompts, ...res.data])
-        setloadMore(res.data.length === 10)
-      }else{
+        console.log('user prompts', res);
+        setUserPrompts([...userPrompts, ...res.data]);
+        setloadMore(res.data.length === 10);
+      } else {
         setloadMore(false);
       }
     } catch (error) {
       setloadMore(false);
-      console.log("error in fetching user prompts", error)
+      console.log('error in fetching user prompts', error);
     } finally {
-      setIsLoading(false)
-      console.log("loadmore is", loadMore)
+      setIsLoading(false);
+      console.log('loadmore is', loadMore);
     }
-  }
+  };
 
   useEffect(() => {
-    fetchAllUserPrompts()
-  }, [index])
+    fetchAllUserPrompts();
+  }, [index]);
 
   const renderPromptCards = ({ item }: { item: Prompt }) => {
-    return <PromptCard item={item} />
-  }
+    return <PromptCard item={item} />;
+  };
 
   const renderEmptyState = () => (
     <View className="flex-1 items-center justify-center px-6 py-20">
@@ -50,35 +55,36 @@ const top = 10;
         No Prompts Yet
       </Text>
       <Text className="text-base text-gray-600 text-center mb-6">
-        You haven't created any prompts yet. Start creating amazing prompts to see them here!
+        You haven't created any prompts yet. Start creating amazing prompts to
+        see them here!
       </Text>
     </View>
-  )
- const handleLoadMore = () => {
+  );
+  const handleLoadMore = () => {
     if (loadMore && !isLoading) {
-      console.log("loading more, current index:", index);
-      setindex(prevIndex => prevIndex + 1);
+      console.log('loading more, current index:', index);
+      setindex((prevIndex) => prevIndex + 1);
     }
-  }
+  };
   const renderLoadingState = () => (
     <View className="flex-1 items-center justify-center">
       <ActivityIndicator size="large" color="#3B82F6" />
       <Text className="text-gray-600 mt-4">Loading your prompts...</Text>
     </View>
-  )
+  );
 
   return (
-    <View className="flex-1 bg-gray-50" >
+    <View className="flex-1 bg-gray-50">
       {/* Header */}
       <View className="bg-white px-4 py-4 border-b border-gray-200 shadow-sm">
         <View className="flex-row items-center">
-          <TouchableOpacity
+          <Pressable
             onPress={() => router.back()}
             className="mr-3 p-2 -ml-2"
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           >
             <ArrowLeft size={24} color="#1F2937" />
-          </TouchableOpacity>
+          </Pressable>
           <Text className="text-2xl font-bold text-gray-900">My Prompts</Text>
         </View>
       </View>
@@ -103,7 +109,7 @@ const top = 10;
         />
       )}
     </View>
-  )
-}
+  );
+};
 
-export default UserPrompt
+export default UserPrompt;

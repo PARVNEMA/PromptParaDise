@@ -4,7 +4,7 @@ import {
   Text,
   ScrollView,
   TextInput,
-  TouchableOpacity,
+  Pressable,
   Image,
   Alert,
   ActivityIndicator,
@@ -47,7 +47,7 @@ export default function CreatePromptScreen() {
     if (status !== 'granted') {
       Alert.alert(
         'Permission Required',
-        'Sorry, we need camera roll permissions to upload images.'
+        'Sorry, we need camera roll permissions to upload images.',
       );
     }
   };
@@ -92,7 +92,7 @@ export default function CreatePromptScreen() {
       if (status !== 'granted') {
         Alert.alert(
           'Permission Required',
-          'Sorry, we need camera permissions to take photos.'
+          'Sorry, we need camera permissions to take photos.',
         );
         return;
       }
@@ -148,7 +148,6 @@ export default function CreatePromptScreen() {
 
     try {
       setIsEnhancing(true);
-
 
       const enhancedText = await PromptService.promptEnhancer(prompt);
 
@@ -215,9 +214,9 @@ export default function CreatePromptScreen() {
       >
         {/* Header */}
         <View className="bg-white px-4 py-4 border-b border-gray-200 flex-row items-center">
-          <TouchableOpacity onPress={() => router.back()} className="mr-3">
+          <Pressable onPress={() => router.back()} className="mr-3">
             <ArrowLeft size={24} color="#1F2937" />
-          </TouchableOpacity>
+          </Pressable>
           <Text className="text-2xl font-bold text-gray-900 flex-1">
             Create Prompt
           </Text>
@@ -254,7 +253,7 @@ export default function CreatePromptScreen() {
                 <Text className="text-sm font-semibold text-gray-700">
                   Prompt Content *
                 </Text>
-                <TouchableOpacity
+                <Pressable
                   onPress={handleEnhance}
                   disabled={isEnhancing}
                   className={`flex-row items-center px-4 py-2 rounded-full shadow-sm ${
@@ -271,7 +270,7 @@ export default function CreatePromptScreen() {
                       </Text>
                     </>
                   )}
-                </TouchableOpacity>
+                </Pressable>
               </View>
               <TextInput
                 className="bg-gray-100 rounded-lg px-4 py-3 text-base text-gray-900"
@@ -328,7 +327,7 @@ export default function CreatePromptScreen() {
                   className="flex-row"
                 >
                   {categories.map((category) => (
-                    <TouchableOpacity
+                    <Pressable
                       key={category._id}
                       onPress={() => setSelectedCategory(category._id)}
                       className={`mr-2 px-4 py-2 rounded-full border ${
@@ -346,7 +345,7 @@ export default function CreatePromptScreen() {
                       >
                         {category.name}
                       </Text>
-                    </TouchableOpacity>
+                    </Pressable>
                   ))}
                 </ScrollView>
               )}
@@ -369,7 +368,7 @@ export default function CreatePromptScreen() {
                       resizeMode: 'cover',
                     }}
                   />
-                  <TouchableOpacity
+                  <Pressable
                     onPress={() => setImage(null)}
                     className="absolute top-2 right-2 bg-red-500 rounded-full p-2"
                     style={{
@@ -381,10 +380,10 @@ export default function CreatePromptScreen() {
                     }}
                   >
                     <X size={20} color="#FFFFFF" />
-                  </TouchableOpacity>
+                  </Pressable>
                 </View>
               ) : (
-                <TouchableOpacity
+                <Pressable
                   onPress={handleImageOptions}
                   className="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg py-12 items-center justify-center"
                 >
@@ -395,7 +394,7 @@ export default function CreatePromptScreen() {
                   <Text className="text-gray-500 text-sm mt-1">
                     Take photo or choose from library
                   </Text>
-                </TouchableOpacity>
+                </Pressable>
               )}
             </View>
 

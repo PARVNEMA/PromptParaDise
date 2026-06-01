@@ -4,7 +4,7 @@ import {
   Text,
   FlatList,
   RefreshControl,
-  TouchableOpacity,
+  Pressable,
   Alert,
   TextInput,
 } from 'react-native';
@@ -207,9 +207,9 @@ export default function HomeScreen() {
     <View className="flex-1 bg-gray-50">
       {/* Header */}
       <View className="bg-white px-4 py-4   border-gray-200 flex-row items-center gap-2">
-       <Logo size={22} height={12} width={12}/>
+        <Logo size={22} height={12} width={12} />
         <Text className="text-2xl font-bold text-gray-900 mt-1 font-display">
-        PromptParaDise
+          PromptParaDise
         </Text>
       </View>
 
@@ -225,9 +225,9 @@ export default function HomeScreen() {
             onChangeText={setSearchQuery}
           />
           {searchQuery.length > 0 && (
-            <TouchableOpacity onPress={() => setSearchQuery('')}>
+            <Pressable onPress={() => setSearchQuery('')}>
               <X size={20} color="#6B7280" />
-            </TouchableOpacity>
+            </Pressable>
           )}
         </View>
 
@@ -256,7 +256,6 @@ export default function HomeScreen() {
         showsVerticalScrollIndicator={false}
         onEndReached={loadMore}
         onEndReachedThreshold={0.5}
-
         ListEmptyComponent={() => (
           <View className="flex-1 justify-center items-center py-20">
             <Text className="text-lg font-semibold text-gray-600 mb-2">
@@ -272,7 +271,7 @@ export default function HomeScreen() {
       />
 
       {/* Floating Action Button */}
-      <TouchableOpacity
+      <Pressable
         className="absolute bottom-6 right-6 bg-blue-600 w-14 h-14 rounded-full items-center justify-center shadow-lg"
         onPress={() => router.push('/(other)/create-prompt')}
         style={{
@@ -284,7 +283,7 @@ export default function HomeScreen() {
         }}
       >
         <Plus size={28} color="#FFFFFF" />
-      </TouchableOpacity>
+      </Pressable>
     </View>
   );
 }

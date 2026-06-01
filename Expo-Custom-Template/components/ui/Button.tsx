@@ -1,14 +1,14 @@
 import React, { ReactNode } from 'react';
 import {
-  TouchableOpacity,
+  Pressable,
   Text,
   ActivityIndicator,
-  TouchableOpacityProps,
+  PressableProps,
   ViewStyle,
   TextStyle,
 } from 'react-native';
 
-interface ButtonProps extends TouchableOpacityProps {
+interface ButtonProps extends PressableProps {
   title: string;
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
   size?: 'sm' | 'md' | 'lg';
@@ -88,7 +88,7 @@ const Button: React.FC<ButtonProps> = ({
   const isDisabled = disabled || loading;
 
   return (
-    <TouchableOpacity
+    <Pressable
       className={`
         ${getVariantStyles()}
         ${getSizeStyles()}
@@ -120,7 +120,7 @@ const Button: React.FC<ButtonProps> = ({
         {title}
       </Text>
       {!loading && rightIcon && <>{rightIcon}</>}
-    </TouchableOpacity>
+    </Pressable>
   );
 };
 

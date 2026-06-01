@@ -57,6 +57,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
     try {
       setIsLoading(true);
       const authResponse = await authService.login(credentials);
+      console.log('authResponse in login', authResponse);
+
       if(authResponse){
         setUser(authResponse.user);
         setToken(authResponse.token);

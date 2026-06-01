@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  ViewStyle,
-  TextStyle,
-} from 'react-native';
+import { View, Text, Pressable, ViewStyle, TextStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 interface ListItemProps {
@@ -33,7 +27,7 @@ export default function ListItem({
   disabled = false,
   showChevron = false,
 }: ListItemProps) {
-  const Container = onPress ? TouchableOpacity : View;
+  const Container = onPress ? Pressable : View;
 
   return (
     <Container

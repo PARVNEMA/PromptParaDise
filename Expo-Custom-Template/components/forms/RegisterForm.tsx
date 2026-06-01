@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Alert, TouchableOpacity, Image, Platform } from 'react-native';
+import { View, Text, Alert, Pressable, Image, Platform } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -126,7 +126,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
         {/* Avatar Picker */}
         <View className="items-center mb-4">
           <Text className="text-sm font-medium text-gray-700 mb-3">Profile Picture (Optional)</Text>
-          <TouchableOpacity
+          <Pressable
             onPress={pickImage}
             className="relative"
             activeOpacity={0.7}
@@ -145,7 +145,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
             <View className="absolute bottom-0 right-0 bg-green-600 rounded-full p-2 border-2 border-white">
               <Camera size={16} color="white" />
             </View>
-          </TouchableOpacity>
+          </Pressable>
         </View>
 
         <Controller

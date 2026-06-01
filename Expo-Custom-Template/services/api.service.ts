@@ -181,6 +181,8 @@ class ApiService {
     const response = await this.retryRequest(() =>
       this.client.post<ApiResponse<T> | T>(url, data, config)
     );
+  console.log('response in post', response);
+
     return (response.data as ApiResponse<T>).data || (response.data as T);
   }
 
@@ -198,6 +200,7 @@ class ApiService {
         },
       })
     );
+      console.log('response in post form', response);
     return (response.data as ApiResponse<T>).data || (response.data as T);
   }
 

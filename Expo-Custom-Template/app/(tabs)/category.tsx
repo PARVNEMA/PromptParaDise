@@ -3,7 +3,7 @@ import {
   Text,
   Alert,
   FlatList,
-  TouchableOpacity,
+  Pressable,
   RefreshControl,
   ScrollView,
   Image,
@@ -55,7 +55,10 @@ const Category = () => {
         const transformedPrompts = response.data.map((prompt: any) => ({
           ...prompt,
           id: prompt.id || prompt._id, // Ensure id field exists
-          category: typeof prompt.category === 'object' ? prompt.category.name : prompt.category,
+          category:
+            typeof prompt.category === 'object'
+              ? prompt.category.name
+              : prompt.category,
           likeCount: prompt.likeCount || 0,
           bookmarkCount: prompt.bookmarkCount || 0,
           views: prompt.views || 0,
@@ -122,7 +125,7 @@ const Category = () => {
     const gradientColors = getCategoryColor(item.color);
 
     return (
-      <TouchableOpacity
+      <Pressable
         onPress={() => handleCategoryPress(item._id)}
         className="w-[48%] mb-4"
       >
@@ -135,10 +138,7 @@ const Category = () => {
           >
             {/* Icon */}
             <View className="mb-3">
-              <Image
-                source={{ uri: item.icon }}
-                className="w-12 h-12"
-              />
+              <Image source={{ uri: item.icon }} className="w-12 h-12" />
             </View>
 
             {/* Category Name */}
@@ -164,7 +164,7 @@ const Category = () => {
             )}
           </LinearGradient>
         </Card>
-      </TouchableOpacity>
+      </Pressable>
     );
   };
 
@@ -184,15 +184,10 @@ const Category = () => {
       <View className="flex-1 bg-gray-50">
         {/* Header */}
         <View className="bg-white px-4 py-4 border-b border-gray-200">
-
-
           <View className="flex-row items-center  gap-2">
-             <TouchableOpacity
-            onPress={handleBackToCategories}
-            className="mb-3"
-          >
-            <MaterialIcons name="arrow-back" size={24} color="black" />
-          </TouchableOpacity>
+            <Pressable onPress={handleBackToCategories} className="mb-3">
+              <MaterialIcons name="arrow-back" size={24} color="black" />
+            </Pressable>
             <Image
               source={{ uri: selectedCat?.icon }}
               className="w-10 h-10 mr-2"
@@ -250,9 +245,7 @@ const Category = () => {
     <View className="flex-1 bg-gray-50">
       {/* Header */}
       <View className="bg-white px-4 py-4 border-b border-gray-200">
-        <Text className="text-2xl font-bold text-gray-900">
-          Categories 🗂️
-        </Text>
+        <Text className="text-2xl font-bold text-gray-900">Categories 🗂️</Text>
         <Text className="text-base text-gray-600 mt-1">
           Explore prompts by category
         </Text>

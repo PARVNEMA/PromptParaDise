@@ -3,7 +3,7 @@ import {
   Modal,
   View,
   Text,
-  TouchableOpacity,
+  Pressable,
   ViewStyle,
   TextStyle,
 } from 'react-native';
@@ -39,17 +39,17 @@ export default function CustomModal({
           {(title || showCloseButton) && (
             <View className="flex-row justify-between items-center mb-4">
               {title && (
-                <Text className="text-lg font-semibold text-gray-900" style={titleStyle}>
+                <Text
+                  className="text-lg font-semibold text-gray-900"
+                  style={titleStyle}
+                >
                   {title}
                 </Text>
               )}
               {showCloseButton && (
-                <TouchableOpacity
-                  onPress={onClose}
-                  className="p-2 -m-2"
-                >
+                <Pressable onPress={onClose} className="p-2 -m-2">
                   <Text className="text-gray-500 text-lg">×</Text>
-                </TouchableOpacity>
+                </Pressable>
               )}
             </View>
           )}
